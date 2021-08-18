@@ -24,9 +24,7 @@ type Conf struct {
 	Admins           []Admin `json:"admins,omitempty"`
 }
 
-var confFile string
-
-const confInit = `{
+const confDefault = `{
   "addr": "localhost:1213",
   "max_users": 20000,
   "max_rooms": 200,
@@ -42,35 +40,19 @@ const confInit = `{
   ]
 }`
 
-// init creates configuration file '${HOME}/.gochat.conf' if it doesn't exist.
-func init() {
-	homeDir, err := os.UserHomeDir()
-	if err != nil { // init confFile
-		log.Fatal(err)
-	}
-	storeDir := homeDir + "/.GoChat"
-	if err := os.MkdirAll(storeDir, os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-	if err := os.MkdirAll(storeDir+"/db", os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-	if err := os.MkdirAll(storeDir+"/log", os.ModePerm); err != nil {
-		log.Fatal(err)
-	}
-
-	confFile = storeDir + "/gochat.conf"
-	if _, err := os.Stat(confFile); os.IsNotExist(err) {
-		file, err := os.Create(confFile)
+// init creates configuration file '${HOME}/.GoChat/gochat.conf' if it doesn't exist.
+func initConf() {
+	if _, err := os.Stat(ProjectConfDir()); os.IsNotExist(err) {
+		file, err := os.Create(ProjectConfDir())
 		if err != nil {
 			log.Fatal(err)
 		}
-		_, _ = fmt.Fprintf(file, confInit)
+		_, _ = file.Write([]byte(confDefault))
 		defer func() { _ = file.Close() }()
 	}
 }
 
-// NewConf returns address of type Conf.
+// NewConf returns address of type Conf with default values.
 // The default and first admin in Admins is root, and root's default password is '971213'.
 func NewConf() *Conf {
 	return &Conf{
@@ -87,7 +69,7 @@ func NewConf() *Conf {
 
 // Load reads content of configuration from confFile
 func (c *Conf) Load() {
-	data, err := ioutil.ReadFile(confFile)
+	data, err := ioutil.ReadFile(ProjectConfDir())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,7 +80,7 @@ func (c *Conf) Load() {
 
 // Load writes content of configuration to confFile
 func (c *Conf) Save() {
-	file, err := os.Create(confFile)
+	file, err := os.Create(ProjectConfDir())
 	if err != nil {
 		log.Fatal(err)
 	}
