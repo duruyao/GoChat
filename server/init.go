@@ -14,20 +14,13 @@ var UserHomeDir = func() string {
 }()
 
 const (
-	projectDb   = ".GoChat/db"
-	projectLog  = ".GoChat/log"
-	projectConf = ".GoChat/gochat.conf"
+	DbFileDirFmt    = "%s/.GoChat/db"
+	LogFileDirFmt   = "%s/.GoChat/log"
+	ConfFilePathFmt = "%s/.GoChat/gochat.conf"
 )
 
 func init() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	initDb()
+	initConf()
 	initLog()
-	initConf() // make sure to call initConf() last
+	initDb()
 }
-
-func ProjectDbDir() string { return UserHomeDir + "/" + projectDb }
-
-func ProjectLogDir() string { return UserHomeDir + "/" + projectLog }
-
-func ProjectConfDir() string { return UserHomeDir + "/" + projectConf }

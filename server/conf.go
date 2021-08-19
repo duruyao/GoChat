@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type Admin struct {
@@ -40,10 +41,18 @@ const confDefault = `{
   ]
 }`
 
-// init creates configuration file '${HOME}/.GoChat/gochat.conf' if it doesn't exist.
+// init creates file '${HOME}/.GoChat/gochat.conf' if it doesn't exist.
 func initConf() {
-	if _, err := os.Stat(ProjectConfDir()); os.IsNotExist(err) {
-		file, err := os.Create(ProjectConfDir())
+	// mkdir ${HOME}/.GoChat/
+	path := (*Conf)(nil).FilePath()
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+		log.Fatal(err)
+	}
+
+	// echo ${confDefault} > ${HOME}/.GoChat/gochat.conf
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		file, err := os.Create(path)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -69,7 +78,7 @@ func NewConf() *Conf {
 
 // Load reads content of configuration from confFile
 func (c *Conf) Load() {
-	data, err := ioutil.ReadFile(ProjectConfDir())
+	data, err := ioutil.ReadFile(c.FilePath())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -80,7 +89,7 @@ func (c *Conf) Load() {
 
 // Load writes content of configuration to confFile
 func (c *Conf) Save() {
-	file, err := os.Create(ProjectConfDir())
+	file, err := os.Create(c.FilePath())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,3 +114,6 @@ func (c *Conf) AddAdmin(uid string, pwd string) {
 	}
 	c.Admins = append(c.Admins, a)
 }
+
+// FilePath returns '${HOME}/.GoChat/gochat.conf'.
+func (c *Conf) FilePath() string { return fmt.Sprintf(ConfFilePathFmt, UserHomeDir) }
