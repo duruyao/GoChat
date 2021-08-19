@@ -2,21 +2,48 @@ package server
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
+	"sync"
+	"time"
 )
 
-type Log struct {
+var loggerOnce sync.Once
+var loggerInstance *Logger
+
+type Logger struct {
+	file *os.File
+	path string
 }
 
-// initLog creates directory '${HOME}/.GoChat/log' if it doesn't exist.
-func initLog() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+//
+func GetLogger(fileEnable bool) *Logger {
+	loggerOnce.Do(func() {
+		if fileEnable {
+			loggerInstance = &Logger{
+				path: fmt.Sprintf(LogFileDirFmt, UserHomeDir) + "/" + time.Now().Format("2006-01-02") + ".log",
+			}
+			loggerInstance.OpenFile()
+		}
+	})
+	return loggerInstance
+}
 
-	if err := os.MkdirAll((*Log)(nil).FileDir(), os.ModePerm); err != nil {
+//
+func (l *Logger) OpenFile() {
+	var err error
+	l.file, err = os.OpenFile(l.path, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
+	if err != nil {
 		log.Fatal(err)
 	}
+	mw := io.MultiWriter(os.Stdout, l.file)
+	log.SetOutput(mw)
+	log.Printf("Open %s\n", l.path)
 }
 
-// File returns '${HOME}/.GoChat/log'.
-func (l *Log) FileDir() string { return fmt.Sprintf(LogFileDirFmt, UserHomeDir) }
+//
+func (l *Logger) CloseFile() {
+	log.Printf("Close %s\n", l.path)
+	_ = l.file.Close()
+}
