@@ -18,32 +18,28 @@ var files = map[string]*os.File{ //
 	"fatal": nil,
 }
 
-var dirOnce sync.Once
-var dir string
+var userHomeDirOnce sync.Once
+var userHomeDir string
+
+func UserHomeDir() string {
+	userHomeDirOnce.Do(func() {
+		var err error
+		userHomeDir, err = os.UserHomeDir()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	})
+	return userHomeDir
+}
 
 // Dir returns '${HOME}/.GoChat/log'.
 func Dir() string {
-	dirOnce.Do(func() {
-		userHomeDir, err := os.UserHomeDir()
-		if err != nil {
-			log.Fatal(err)
-		}
-		dir = fmt.Sprintf(fileDirFmt, userHomeDir, time.Now().Format("2006-01-02"))
-	})
-	return dir
+	return fmt.Sprintf(fileDirFmt, UserHomeDir(), time.Now().Format("2006-01-02"))
 }
 
-var pathsOnce sync.Once
-var paths = map[string]string{}
-
 //
-func Path(key string) string {
-	pathsOnce.Do(func() {
-		for name := range files {
-			paths[name] = Dir() + "/" + name + ".log"
-		}
-	})
-	return paths[key]
+func Path(name string) string {
+	return Dir() + "/" + name + ".log"
 }
 
 //
@@ -53,8 +49,8 @@ func AreExist() bool {
 
 //
 func AreNotExist() bool {
-	for key := range files {
-		if _, err := os.Stat(Path(key)); os.IsNotExist(err) {
+	for name := range files {
+		if _, err := os.Stat(Path(name)); os.IsNotExist(err) {
 			return true
 		}
 	}

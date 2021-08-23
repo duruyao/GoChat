@@ -56,3 +56,10 @@ func FatalLogger() *log.Logger {
 	})
 	return fatalLogger
 }
+
+func RefreshLogger() {
+	debugLogger = log.New(io.MultiWriter(os.Stdout, files["all"], files["debug"]), "[debug] ", flags)
+	infoLogger = log.New(io.MultiWriter(os.Stdout, files["all"], files["info"]), "[info ] ", flags)
+	errorLogger = log.New(io.MultiWriter(os.Stderr, files["all"], files["error"]), "[error] ", flags)
+	fatalLogger = log.New(io.MultiWriter(os.Stderr, files["all"], files["fatal"]), "[fatal] ", flags)
+}
