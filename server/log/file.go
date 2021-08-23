@@ -10,7 +10,7 @@ import (
 
 const fileDirFmt = "%s/.GoChat/log/%s"
 
-var files = map[string]*os.File{
+var files = map[string]*os.File{ //
 	"all":   nil,
 	"debug": nil,
 	"info":  nil,
@@ -33,6 +33,34 @@ func Dir() string {
 	return dir
 }
 
+var pathsOnce sync.Once
+var paths = map[string]string{}
+
+//
+func Path(key string) string {
+	pathsOnce.Do(func() {
+		for name := range files {
+			paths[name] = Dir() + "/" + name + ".log"
+		}
+	})
+	return paths[key]
+}
+
+//
+func AreExist() bool {
+	return !AreNotExist()
+}
+
+//
+func AreNotExist() bool {
+	for key := range files {
+		if _, err := os.Stat(Path(key)); os.IsNotExist(err) {
+			return true
+		}
+	}
+	return false
+}
+
 //
 func CreateFiles() (err error) {
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
@@ -41,7 +69,7 @@ func CreateFiles() (err error) {
 		}
 	}
 	for name := range files {
-		files[name], err = os.Create(Dir() + "/" + name + ".log")
+		files[name], err = os.Create(Path(name))
 		if err != nil {
 			return err
 		}
@@ -55,7 +83,7 @@ func OpenFiles() (err error) {
 		if nil != f {
 			continue
 		}
-		if files[name], err = os.OpenFile(Dir()+"/"+name+".log", os.O_WRONLY|os.O_APPEND, 0666); err != nil {
+		if files[name], err = os.OpenFile(Path(name), os.O_WRONLY|os.O_APPEND, 0666); err != nil {
 			return err
 		}
 	}
