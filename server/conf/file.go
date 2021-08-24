@@ -58,16 +58,16 @@ func CreateFile() (err error) {
 	return err
 }
 
-// ReadFile reads a type Conf from the file '${HOME}/.GoChat/conf/gochat.conf' to conf.
-func ReadFile(conf *Conf) error {
+// ReadFile reads a type Config from the file '${HOME}/.GoChat/conf/gochat.conf' to conf.
+func ReadFile(c *Config) error {
 	data, err := ioutil.ReadFile(Path())
 	if err != nil {
 		return err
 	}
-	return conf.Parse(data)
+	return c.Parse(data)
 }
 
-// WriteFile writes a type Conf from conf to the new file '${HOME}/.GoChat/conf/gochat.conf'.
-func WriteFile(conf *Conf) error {
-	return ioutil.WriteFile(Path(), conf.Bytes(), 0666)
+// WriteFile writes a type Config from conf to the new file '${HOME}/.GoChat/conf/gochat.conf'.
+func WriteFile(c *Config) error {
+	return ioutil.WriteFile(Path(), []byte(c.String()), 0666)
 }
