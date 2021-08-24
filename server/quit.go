@@ -26,7 +26,7 @@ func (bq *beforeQuit) Do() {
 
 var BeforeQuit beforeQuit
 
-var quit chan struct{}
+var quit = make(chan struct{})
 
 func Quit() <-chan struct{} { return quit }
 
