@@ -1,6 +1,6 @@
 # GoChat
 
-![img/chat.svg](img/chat.svg)
+<img class="" src='img/chat.svg' style='width:480px;height:480px'/>
 
 [en-US](README.md)
 
