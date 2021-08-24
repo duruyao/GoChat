@@ -5,71 +5,69 @@ import (
 	"sync"
 )
 
-type Data struct {
-	Room  string `json:"room"`
-	Uid   string `json:"admin_uid"`
+type Room struct {
+	Rid   string `json:"room_id"`
+	Uid   string `json:"admin_id"`
 	Token string `json:"token"`
 }
 
-type roomAttribute struct {
+type RoomAttr struct {
 	Uid   string
 	Token string
 }
 
-type table struct {
+type RoomTable struct {
 	rwMutex  sync.RWMutex
-	data     []Data
+	data     []Room
 	roomsSet map[string]bool
-	roomsMap map[string]roomAttribute
+	roomsMap map[string]RoomAttr
 }
 
-func NewTable() *table {
-	return &table{
+func NewRoomTable() *RoomTable {
+	return &RoomTable{
 		roomsSet: map[string]bool{},
-		roomsMap: map[string]roomAttribute{},
+		roomsMap: map[string]RoomAttr{},
 	}
 }
 
-// String returns type string in JSON format.
-func (t *table) String() string {
-	t.rwMutex.RLock()
-	defer t.rwMutex.RUnlock()
-	if js, err := json.MarshalIndent(t.data, "", "    "); err != nil {
+// String returns JSON format string.
+func (r *RoomTable) String() string {
+	r.rwMutex.RLock()
+	defer r.rwMutex.RUnlock()
+	if js, err := json.MarshalIndent(r.data, "", "    "); err != nil {
 		return err.Error()
 	} else {
 		return string(js)
 	}
 }
 
-// String returns type []byte in JSON format.
-func (t *table) Bytes() []byte {
-	t.rwMutex.RLock()
-	defer t.rwMutex.RUnlock()
-	if js, err := json.MarshalIndent(t.data, "", "    "); err != nil {
-		return []byte(err.Error())
+// Serialize returns JSON format without indent.
+func (r *RoomTable) Serialize() string {
+	if js, err := json.Marshal(r.data); err != nil {
+		return err.Error()
 	} else {
-		return js
+		return string(js)
 	}
 }
 
 // Parse parses type Conf from type []byte in JSON format.
-func (t *table) Parse(js []byte) error {
-	t.rwMutex.Lock()
-	defer t.rwMutex.Unlock()
+func (r *RoomTable) Parse(js []byte) error {
+	r.rwMutex.Lock()
+	defer r.rwMutex.Unlock()
 	if len(js) == 0 {
 		return nil
 	}
-	return json.Unmarshal(js, &(t.data))
+	return json.Unmarshal(js, &(r.data))
 }
 
-func (t *table) Insert(data Data) bool {
-	t.rwMutex.Lock()
-	defer t.rwMutex.Unlock()
-	if t.roomsSet[data.Room] {
+func (r *RoomTable) Insert(room Room) bool {
+	r.rwMutex.Lock()
+	defer r.rwMutex.Unlock()
+	if r.roomsSet[room.Rid] {
 		return false
 	}
-	t.roomsSet[data.Room] = true
-	t.roomsMap[data.Room] = roomAttribute{data.Uid, data.Token}
-	t.data = append(t.data, data)
+	r.roomsSet[room.Rid] = true
+	r.roomsMap[room.Rid] = RoomAttr{room.Uid, room.Token}
+	r.data = append(r.data, room)
 	return true
 }

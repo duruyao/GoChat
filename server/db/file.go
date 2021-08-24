@@ -56,16 +56,16 @@ func CreateFile() (err error) {
 	return err
 }
 
-// ReadFile reads a type table from the file '${HOME}/.GoChat/db/gochat.db' to conf.
-func ReadFile(tab *table) error {
+// ReadFile reads a type RoomTable from the file '${HOME}/.GoChat/db/gochat.db' to conf.
+func ReadFile(r *RoomTable) error {
 	data, err := ioutil.ReadFile(Path())
 	if err != nil {
 		return err
 	}
-	return tab.Parse(data)
+	return r.Parse(data)
 }
 
-// WriteFile writes a type table from conf to the new file '${HOME}/.GoChat/db/gochat.db'.
-func WriteFile(tab *table) error {
-	return ioutil.WriteFile(Path(), tab.Bytes(), 0666)
+// WriteFile writes a type RoomTable from conf to the new file '${HOME}/.GoChat/db/gochat.db'.
+func WriteFile(r *RoomTable) error {
+	return ioutil.WriteFile(Path(), []byte(r.String()), 0666)
 }
