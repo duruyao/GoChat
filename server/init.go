@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	Config = conf.DefaultConf()
-	Table  = db.NewTable()
+	MyConfig    = conf.NewDefaultConfig()
+	MyRoomTable = db.NewRoomTable()
 )
 
 func init() {
@@ -18,17 +18,17 @@ func init() {
 		if err := conf.CreateFile(); err != nil {
 			log.Fatalln(err)
 		}
-		if err := conf.WriteFile(&Config); err != nil {
+		if err := conf.WriteFile(MyConfig); err != nil {
 			log.Fatalln(err)
 		}
 	} else {
-		if err := conf.ReadFile(&Config); err != nil {
+		if err := conf.ReadFile(MyConfig); err != nil {
 			log.Fatalln(err)
 		}
 	}
 
 	// init log files
-	if Config.LogFileEnable {
+	if MyConfig.LogFileEnable() {
 		if mlog.AreNotExist() {
 			if err := mlog.CreateFiles(); err != nil {
 				log.Fatalln(err)
@@ -44,13 +44,13 @@ func init() {
 	go GoRefreshLogFiles()
 
 	// init database file
-	if Config.DbFileEnable {
+	if MyConfig.DbFileEnable() {
 		if db.IsNotExist() {
 			if err := db.CreateFile(); err != nil {
 				Fatal(err)
 			}
 		} else {
-			if err := db.ReadFile(Table); err != nil {
+			if err := db.ReadFile(MyRoomTable); err != nil {
 				Fatal(err)
 			}
 		}
