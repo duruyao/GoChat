@@ -2,6 +2,7 @@
 *.idea/
 
 # Temp files
+tmp_bin/
 *.swp
 *~
 
