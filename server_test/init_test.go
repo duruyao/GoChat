@@ -6,11 +6,8 @@ import (
 )
 
 func TestInit(t *testing.T) {
-	defer func() {
-		if err := sev.Quit(); err != nil {
-			sev.Fatal(err)
-		}
-	}()
+	defer sev.BeforeQuit.Do()
+	defer sev.WantQuit()
 	sev.Info("Load configuration:\n" + sev.Config.String())
 	sev.Info("Load database:\n" + sev.Table.String())
 }
