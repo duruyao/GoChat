@@ -90,9 +90,20 @@ func init() {
 //
 func goLogFilesRefresher() {
 	duration := tomorrow().Sub(time.Now())
+	select {
+	case <-time.After(duration):
+		if err := mlog.CloseFiles(); err != nil {
+			log.Fatalln(err)
+		}
+		if err := mlog.CreateFiles(); err != nil {
+			log.Fatalln(err)
+		}
+		mlog.RefreshLogger()
+		bindLoggerFunc()
+	}
 	for {
 		select {
-		case <-time.After(duration):
+		case <-time.After(24 * time.Hour):
 			if err := mlog.CloseFiles(); err != nil {
 				log.Fatalln(err)
 			}
@@ -100,8 +111,7 @@ func goLogFilesRefresher() {
 				log.Fatalln(err)
 			}
 			mlog.RefreshLogger()
-			bindLoggerFunc()
-			duration = tomorrow().Sub(time.Now())
+			bindLoggerFunc() // TODO: add codes for quiting: case <-QUIT
 		}
 	}
 }
