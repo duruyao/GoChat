@@ -40,18 +40,17 @@ func init() {
 		}
 		BeforeQuit.Append(mlog.CloseFiles)
 	}
-	BindPrintFunc()
 	go GoRefreshLogFiles()
 
 	// init database file
 	if MyConfig.DbFileEnable() {
 		if db.IsNotExist() {
 			if err := db.CreateFile(); err != nil {
-				Fatal(err)
+				mlog.FatalLn(err)
 			}
 		} else {
 			if err := db.ReadFile(MyRoomTable); err != nil {
-				Fatal(err)
+				mlog.FatalLn(err)
 			}
 		}
 	}
