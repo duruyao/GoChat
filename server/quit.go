@@ -1,6 +1,9 @@
 package server
 
-import "sync"
+import (
+	mlog "github.com/duruyao/gochat/server/log"
+	"sync"
+)
 
 type beforeQuit struct {
 	doOnce sync.Once
@@ -18,7 +21,7 @@ func (bq *beforeQuit) Do() {
 	bq.doOnce.Do(func() {
 		for _, f := range bq.funcs {
 			if err := f(); err != nil {
-				Error(err)
+				mlog.ErrorLn(err)
 			}
 		}
 	})
