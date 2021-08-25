@@ -15,6 +15,7 @@ var files = map[string]*os.File{ //
 	"debug": nil,
 	"info":  nil,
 	"error": nil,
+	"panic": nil,
 	"fatal": nil,
 }
 
@@ -89,8 +90,10 @@ func OpenFiles() (err error) {
 //
 func CloseFiles() error {
 	for _, f := range files {
-		if err := f.Close(); err != nil {
-			return err
+		if f != nil {
+			if err := f.Close(); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
