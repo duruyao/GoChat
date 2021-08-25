@@ -3,12 +3,15 @@ package server
 import (
 	mlog "github.com/duruyao/gochat/server/log"
 	"log"
+	"sync"
 	"time"
 )
 
+var refreshLogFilesOnce sync.Once
+
 //
 func GoRefreshLogFiles() {
-	refreshLogFiles()
+	refreshLogFilesOnce.Do(refreshLogFiles)
 	duration := Tomorrow().Sub(time.Now())
 	select {
 	case <-time.After(duration):
