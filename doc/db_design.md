@@ -13,7 +13,7 @@
 ### 1.2. Detail
 
 | Key | Type | Description| Column Constraints | Optional Value |
-| :-: | :-: | :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: | :-: | :-: |
 | UID | `VARCHAR(32)` | user's id | NOT NULL UNIQUE | / |
 | PWD | `VARCHAR(20)` | user's password | NOT NULL | / |
 | TIME | `TIMESTAMP(3)` | timestamp of creating the user | DEFAULT NOW() | / |
@@ -39,7 +39,7 @@ CREATE TABLE GOCHAT_ADMINS (
 ### 2.2. Detail
 
 | Key | Type | Description| Column Constraints | Optional Value |
-| :-: | :-: | :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: | :-: | :-: |
 | RID | `VARCHAR(64)` | id of room | NOT NULL UNIQUE | / |
 | ADMIN | `VARCHAR(32)` | administrator's id | REFERENCES GOCHAT_ADMINS (UID) | / |
 | TOKEN | `VARCHAR(20)` | token of room | NOT NULL | / |
