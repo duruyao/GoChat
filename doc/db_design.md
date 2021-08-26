@@ -6,23 +6,23 @@
 
 |  |  |
 | :-: | :-: |
-| **Table Name** | GOCHAT_ADMINS |
-| **Primary Key** | / |
+| **Table Name** | ADMINS_TB |
+| **Primary Key** | UID |
 | **Table Constraints** | / |
 
 ### 1.2. Detail
 
 | Key | Type | Description| Column Constraints | Optional Value |
 | :-: | :-: | :-: | :-: | :-: |
-| UID | `VARCHAR(32)` | user's id | NOT NULL UNIQUE | / |
-| PWD | `VARCHAR(20)` | user's password | NOT NULL | / |
-| TIME | `TIMESTAMP(3)` | timestamp of creating the user | DEFAULT NOW() | / |
+| UID | `VARCHAR(32)` | user's id | PRIMARY KEY | / |
+| PWD | `TEXT` | user's password | NOT NULL | / |
+| TIME | `TEXT` | timestamp of creating the user | DEFAULT CURRENT_TIMESTAMP | / |
 
 ```sql
-CREATE TABLE GOCHAT_ADMINS (
-    UID VARCHAR(32) NOT NULL UNIQUE,
-    PWD VARCHAR(20) NOT NULL,
-    TIME TIMESTAMP(3) DEFAULT NOW()
+CREATE TABLE ADMINS_TB (
+    UID  VARCHAR(32) PRIMARY KEY,
+    PWD  TEXT        NOT NULL,
+    TIME TEXT        DEFAULT CURRENT_TIMESTAMP
 )
 ```
 
@@ -32,24 +32,24 @@ CREATE TABLE GOCHAT_ADMINS (
 
 |  |  |
 | :-: | :-: |
-| **Table Name** | GOCHAT_ROOMS |
-| **Primary Key** | / |
+| **Table Name** | ROOMS_TB |
+| **Primary Key** | RID |
 | **Table Constraints** | / |
 
 ### 2.2. Detail
 
 | Key | Type | Description| Column Constraints | Optional Value |
 | :-: | :-: | :-: | :-: | :-: |
-| RID | `VARCHAR(64)` | id of room | NOT NULL UNIQUE | / |
-| ADMIN | `VARCHAR(32)` | administrator's id | REFERENCES GOCHAT_ADMINS (UID) | / |
+| RID | `VARCHAR(64)` | id of room | PRIMARY KEY | / |
+| ADMIN | `VARCHAR(32)` | administrator's id | REFERENCES ADMINS_TB(UID) | / |
 | TOKEN | `VARCHAR(20)` | token of room | NOT NULL | / |
-| TIME | `TIMESTAMP(3)` | timestamp of creating the room | DEFAULT NOW() | / |
+| TIME | `TEXT` | timestamp of creating the room | DEFAULT CURRENT_TIMESTAMP | / |
 
 ```sql
-CREATE TABLE GOCHAT_ROOMS (
-    RID VARCHAR(64) NOT NULL UNIQUE,
-    ADMIN VARCHAR(32) REFERENCES GOCHAT_ADMINS (UID),
+CREATE TABLE ROOMS_TB (
+    RID   VARCHAR(64) PRIMARY KEY,
+    ADMIN VARCHAR(32) REFERENCES ADMINS_TB(UID),
     TOKEN VARCHAR(20) NOT NULL,
-    TIME TIMESTAMP(3) DEFAULT NOW()
+    TIME  TEXT        DEFAULT CURRENT_TIMESTAMP
 )
 ```
