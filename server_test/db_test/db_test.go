@@ -5,36 +5,101 @@ import (
 	"testing"
 )
 
-func TestDbCreate(t *testing.T) {
-	if err := db.CreateFile(); err != nil {
+func TestDbCreateQuery(t *testing.T) {
+	if err := db.CreateDB(); err != nil {
 		t.Fatal(err)
 	}
+	if err := db.OpenDB(); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := db.CloseDB(); err != nil {
+			t.Fatal(err)
+		}
+	}()
+	adminsTable := new(db.AdminsTable)
+	admins, err := adminsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(admins)
+	roomsTable := new(db.RoomsTable)
+	rooms, err := roomsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(rooms)
 }
 
-func TestDbReadWrite(t *testing.T) {
-	{
-		tab := db.NewRoomTable()
-		tab.Insert(db.Room{Rid: "237", Uid: "admin1", Token: "adjakdhjad"})
-		tab.Insert(db.Room{Rid: "238", Uid: "admin2", Token: "ahdjkagfjk"})
-		t.Log(tab.String())
-		if err := db.WriteFile(tab); err != nil {
-			t.Fatal(err)
-		}
+func TestDbQuery(t *testing.T) {
+	if err := db.OpenDB(); err != nil {
+		t.Fatal(err)
 	}
-	{
-		tab := db.NewRoomTable()
-		if err := db.ReadFile(tab); err != nil {
+	defer func() {
+		if err := db.CloseDB(); err != nil {
 			t.Fatal(err)
 		}
-		t.Log(tab.String())
-		tab.Insert(db.Room{Rid: "239", Uid: "admin3", Token: "dhdagkffga"})
-		tab.Insert(db.Room{Rid: "240", Uid: "admin4", Token: "dalhfglahf"})
-		if err := db.WriteFile(tab); err != nil {
-			t.Fatal(err)
-		}
-		if err := db.ReadFile(tab); err != nil {
-			t.Fatal(err)
-		}
-		t.Log(tab.String())
+	}()
+	adminsTable := new(db.AdminsTable)
+	admins, err := adminsTable.Query()
+	if err != nil {
+		t.Fatal(err)
 	}
+	t.Log(admins)
+	roomsTable := new(db.RoomsTable)
+	rooms, err := roomsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(rooms)
+}
+
+func TestDbInsertDeleteQuery(t *testing.T) {
+	if err := db.CreateDB(); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.OpenDB(); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := db.CloseDB(); err != nil {
+			t.Fatal(err)
+		}
+	}()
+	adminsTable := new(db.AdminsTable)
+	admins, err := adminsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(admins)
+	roomsTable := new(db.RoomsTable)
+	rooms, err := roomsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(rooms)
+
+	if err := adminsTable.Insert(db.Admin{Uid: "alice", Pwd: "dhjkahdjkl"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := adminsTable.Insert(db.Admin{Uid: "bob", Pwd: "ddhkducnah"}); err != nil {
+		t.Fatal(err)
+	}
+	admins, err = adminsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(admins)
+
+	if err := roomsTable.Insert(db.Room{Rid: "125", Admin: "alice", Token: "ahvpzidjsy"}); err != nil {
+		t.Fatal(err)
+	}
+	if err := roomsTable.Insert(db.Room{Rid: "523", Admin: "chris", Token: "alkovuytfg"}); err != nil {
+		t.Error(err) // NOTE: chris is not in ADMINS_TB
+	} // TODO: find BUG
+	rooms, err = roomsTable.Query()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(rooms)
 }
