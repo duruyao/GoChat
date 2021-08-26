@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	MyConfig    = conf.NewDefaultConfig()
-	MyRoomTable = db.NewRoomTable()
+	MyConfig      = conf.NewDefaultConfig()
+	MyRoomsTable  = new(db.RoomsTable)
+	MyAdminsTable = new(db.AdminsTable)
 )
 
 func init() {
@@ -45,13 +46,13 @@ func init() {
 	// init database file
 	if MyConfig.DbFileEnable() {
 		if db.IsNotExist() {
-			if err := db.CreateFile(); err != nil {
-				mlog.FatalLn(err)
-			}
-		} else {
-			if err := db.ReadFile(MyRoomTable); err != nil {
+			if err := db.CreateDB(); err != nil {
 				mlog.FatalLn(err)
 			}
 		}
+		if err := db.OpenDB(); err != nil {
+			mlog.FatalLn(err)
+		}
+		BeforeQuit.Append(db.CloseDB)
 	}
 }
