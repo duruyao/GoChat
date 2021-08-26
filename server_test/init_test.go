@@ -11,7 +11,17 @@ func TestInit(t *testing.T) {
 	defer server.BeforeQuit.Do()
 	defer server.WantQuit()
 	mlog.InfoLn("Load configuration:\n" + server.MyConfig.String())
-	mlog.InfoLn("Load database:\n" + server.MyRoomTable.String())
+	mlog.InfoLn("Load database:")
+	rooms, err := server.MyRoomsTable.Query()
+	if err != nil {
+		mlog.ErrorLn(err)
+	}
+	mlog.DebugLn(rooms)
+	admins, err := server.MyAdminsTable.Query()
+	if err != nil {
+		mlog.ErrorLn(err)
+	}
+	mlog.DebugLn(admins)
 	time.Sleep(3 * time.Second)
 }
 

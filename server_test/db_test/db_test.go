@@ -96,7 +96,7 @@ func TestDbInsertDeleteQuery(t *testing.T) {
 	}
 	if err := roomsTable.Insert(db.Room{Rid: "523", Admin: "chris", Token: "alkovuytfg"}); err != nil {
 		t.Error(err) // NOTE: chris is not in ADMINS_TB
-	} // TODO: find BUG
+	} // TODO: find BUG about REFERENCES in SQLite
 	rooms, err = roomsTable.Query()
 	if err != nil {
 		t.Fatal(err)
