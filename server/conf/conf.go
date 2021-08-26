@@ -45,7 +45,7 @@ func NewDefaultConfig() *Config {
 			MaxRoomsPerAdmin: 10,
 			DbFileEnable:     true,
 			LogFileEnable:    true,
-			Admins:           []User{{Uid: "root", Pwd: "971213"}},
+			Admins:           []User{{Uid: "root", Pwd: "971213"}, {Uid: "admin", Pwd: "971114"}},
 		},
 	}
 }

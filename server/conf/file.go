@@ -54,7 +54,7 @@ func CreateFile() (err error) {
 	if err != nil {
 		return err
 	}
-	defer func() { err = file.Close() }()
+	defer func() { _ = file.Close() }()
 	return err
 }
 
