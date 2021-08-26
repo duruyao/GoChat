@@ -1,9 +1,8 @@
 package db
 
 import (
-	"database/sql"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -41,8 +40,8 @@ func IsNotExist() bool {
 	return false
 }
 
-// CreateDB creates a new path '${HOME}/.GoChat/db/gochat.db'.
-func CreateDB() (err error) {
+// CreateFile creates a new path '${HOME}/.GoChat/db/gochat.db'.
+func CreateFile() (err error) {
 	var file *os.File
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
 		if err = os.MkdirAll(Dir(), os.ModePerm); err != nil {
@@ -53,27 +52,20 @@ func CreateDB() (err error) {
 	if err != nil {
 		return err
 	}
-	if err = file.Close(); err != nil {
-		return err
-	}
-	if err = OpenDB(); err != nil {
-		return err
-	}
-	defer func() { _ = CloseDB() }()
-	if err = createAdminsTable(); err != nil {
-		return err
-	}
-	if err = createRoomsTable(); err != nil {
-		return err
-	}
+	defer func() { err = file.Close() }()
 	return err
 }
 
-func OpenDB() (err error) {
-	db, err = sql.Open("sqlite3", Path())
-	return err
+// ReadFile reads a type RoomTable from the file '${HOME}/.GoChat/db/gochat.db' to conf.
+func ReadFile(r *RoomTable) error {
+	data, err := ioutil.ReadFile(Path())
+	if err != nil {
+		return err
+	}
+	return r.Parse(data)
 }
 
-func CloseDB() error {
-	return db.Close()
+// WriteFile writes a type RoomTable from conf to the new file '${HOME}/.GoChat/db/gochat.db'.
+func WriteFile(r *RoomTable) error {
+	return ioutil.WriteFile(Path(), []byte(r.String()), 0666)
 }

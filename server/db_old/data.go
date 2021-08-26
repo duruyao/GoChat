@@ -5,28 +5,32 @@ import (
 	"sync"
 )
 
+type Uid string
+type Rid string
+type Token string
+
 type Room struct {
-	Rid   string `json:"room_id"`
-	Uid   string `json:"admin_id"`
-	Token string `json:"token"`
+	Rid   `json:"room_id"`
+	Uid   `json:"admin_id"`
+	Token `json:"token"`
 }
 
 type RoomAttr struct {
-	Uid   string
-	Token string
+	Uid   Uid
+	Token Token
 }
 
 type RoomTable struct {
-	rwMutex  sync.RWMutex
-	data     []Room
-	roomsSet map[string]bool
-	roomsMap map[string]RoomAttr
+	rwMutex sync.RWMutex
+	data    []Room
+	roomSet map[Rid]bool
+	roomMap map[Rid]RoomAttr
 }
 
 func NewRoomTable() *RoomTable {
 	return &RoomTable{
-		roomsSet: map[string]bool{},
-		roomsMap: map[string]RoomAttr{},
+		roomSet: map[Rid]bool{},
+		roomMap: map[Rid]RoomAttr{},
 	}
 }
 
@@ -63,11 +67,11 @@ func (r *RoomTable) Parse(js []byte) error {
 func (r *RoomTable) Insert(room Room) bool {
 	r.rwMutex.Lock()
 	defer r.rwMutex.Unlock()
-	if r.roomsSet[room.Rid] {
+	if r.roomSet[room.Rid] {
 		return false
 	}
-	r.roomsSet[room.Rid] = true
-	r.roomsMap[room.Rid] = RoomAttr{room.Uid, room.Token}
+	r.roomSet[room.Rid] = true
+	r.roomMap[room.Rid] = RoomAttr{room.Uid, room.Token}
 	r.data = append(r.data, room)
 	return true
 }
