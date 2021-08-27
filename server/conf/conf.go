@@ -30,9 +30,7 @@ type Config struct {
 // DefaultConf returns a type Config without default value.
 func NewConfig() *Config {
 	return &Config{
-		cfg: &config{
-			//Root: User{Uid: "root", Pwd: "19971213"},
-		},
+		cfg: &config{},
 	}
 }
 
@@ -45,9 +43,8 @@ func NewDefaultConfig() *Config {
 			MaxRooms:         200,
 			MaxUsersPerRoom:  100,
 			MaxRoomsPerAdmin: 10,
+			HttpsEnable:      true,
 			LogFileEnable:    true,
-			//DbFileEnable:     true,
-			//Root:             User{Uid: "root", Pwd: "19971213"},
 		},
 	}
 }
@@ -88,17 +85,11 @@ func (c *Config) LogFileEnable() bool {
 	return c.cfg.LogFileEnable
 }
 
-//func (c *Config) DbFileEnable() bool {
-//	c.rwMu.RLock()
-//	defer c.rwMu.RUnlock()
-//	return c.cfg.DbFileEnable
-//}
-//
-//func (c *Config) Root() User {
-//	c.rwMu.RLock()
-//	defer c.rwMu.RUnlock()
-//	return c.cfg.Root
-//}
+func (c *Config) HttpsEnable() bool {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.HttpsEnable
+}
 
 func (c *Config) SetAddr(addr string) {
 	c.rwMu.Lock()
@@ -135,17 +126,11 @@ func (c *Config) SetLogFileEnable(logFileEnable bool) {
 	c.cfg.LogFileEnable = logFileEnable
 }
 
-//func (c *Config) SetDbFileEnable(dbFileEnable bool) {
-//	c.rwMu.Lock()
-//	defer c.rwMu.Unlock()
-//	c.cfg.DbFileEnable = dbFileEnable
-//}
-//
-//func (c *Config) SetRoot(pwd string) {
-//	c.rwMu.Lock()
-//	defer c.rwMu.Unlock()
-//	c.cfg.Root.Pwd = pwd
-//}
+func (c *Config) SetHttpsEnable(httpsEnable bool) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.HttpsEnable = httpsEnable
+}
 
 // String returns JSON format string.
 func (c *Config) String() string {
