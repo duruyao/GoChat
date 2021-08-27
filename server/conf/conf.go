@@ -2,6 +2,7 @@ package conf
 
 import (
 	"encoding/json"
+	"sync"
 )
 
 type User struct {
@@ -17,19 +18,19 @@ type config struct {
 	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
 	DbFileEnable     bool   `json:"db_file_enable"`
 	LogFileEnable    bool   `json:"log_file_enable"`
-	Admins           []User `json:"admins,omitempty"`
+	Root             User   `json:"root,omitempty"`
 }
 
 type Config struct {
-	// rwMu sync.RWMutex // TODO: sync.RWMutex will be added in the future, temporarily read-only
-	cfg *config
+	rwMu sync.RWMutex
+	cfg  *config
 }
 
 // DefaultConf returns a type Config without default value.
 func NewConfig() *Config {
 	return &Config{
 		cfg: &config{
-			Admins: []User{},
+			Root: User{Uid: "root", Pwd: "19971213"},
 		},
 	}
 }
@@ -45,32 +46,110 @@ func NewDefaultConfig() *Config {
 			MaxRoomsPerAdmin: 10,
 			DbFileEnable:     true,
 			LogFileEnable:    true,
-			Admins:           []User{{Uid: "root", Pwd: "971213"}, {Uid: "admin", Pwd: "971114"}},
+			Root:             User{Uid: "root", Pwd: "19971213"},
 		},
 	}
 }
 
-func (c *Config) Addr() string { return c.cfg.Addr }
+func (c *Config) Addr() string {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.Addr
+}
 
-func (c *Config) MaxUsers() int { return c.cfg.MaxUsers }
+func (c *Config) MaxUsers() int {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.MaxUsers
+}
 
-func (c *Config) MaxRooms() int { return c.cfg.MaxRooms }
+func (c *Config) MaxRooms() int {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.MaxRooms
+}
 
-func (c *Config) MaxUsersPreRoom() int { return c.cfg.MaxUsersPerRoom }
+func (c *Config) MaxUsersPreRoom() int {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.MaxUsersPerRoom
+}
 
-func (c *Config) MaxRoomsPerAdmin() int { return c.cfg.MaxRoomsPerAdmin }
+func (c *Config) MaxRoomsPerAdmin() int {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.MaxRoomsPerAdmin
+}
 
-func (c *Config) DbFileEnable() bool { return c.cfg.DbFileEnable }
+func (c *Config) DbFileEnable() bool {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.DbFileEnable
+}
 
-func (c *Config) LogFileEnable() bool { return c.cfg.LogFileEnable }
+func (c *Config) LogFileEnable() bool {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.LogFileEnable
+}
 
-func (c *Config) Admins() (backup []User) {
-	copy(backup, c.cfg.Admins)
-	return backup
+func (c *Config) Root() User {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.Root
+}
+
+func (c *Config) SetAddr(addr string) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.Addr = addr
+}
+
+func (c *Config) SetMaxUsers(maxUsers int) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.MaxUsers = maxUsers
+}
+func (c *Config) SetMaxRooms(maxRooms int) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.MaxRooms = maxRooms
+}
+
+func (c *Config) SetMaxUsersPreRoom(maxUsersPreRoom int) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.MaxUsersPerRoom = maxUsersPreRoom
+}
+
+func (c *Config) SetMaxRoomsPerAdmin(maxRoomsPerAdmin int) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.MaxRoomsPerAdmin = maxRoomsPerAdmin
+}
+
+func (c *Config) SetDbFileEnable(dbFileEnable bool) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.DbFileEnable = dbFileEnable
+}
+
+func (c *Config) SetLogFileEnable(logFileEnable bool) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.LogFileEnable = logFileEnable
+}
+
+func (c *Config) SetRoot(pwd string) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.Root.Pwd = pwd
 }
 
 // String returns JSON format string.
 func (c *Config) String() string {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
 	if js, err := json.MarshalIndent(c.cfg, "", "    "); err != nil {
 		return err.Error()
 	} else {
@@ -80,6 +159,8 @@ func (c *Config) String() string {
 
 // Serialize returns JSON format string without indent.
 func (c *Config) Serialize() string {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
 	if js, err := json.Marshal(c.cfg); err != nil {
 		return err.Error()
 	} else {
@@ -89,11 +170,10 @@ func (c *Config) Serialize() string {
 
 // Parse parses type Config from type []byte in JSON format.
 func (c *Config) Parse(js []byte) error {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
 	if len(js) == 0 {
 		return nil
 	}
 	return json.Unmarshal(js, c.cfg)
 }
-
-// AppendAdmins appends admins to c.Admins.
-func (c *Config) AppendAdmins(admins ...User) { c.cfg.Admins = append(c.cfg.Admins, admins...) }
