@@ -16,8 +16,8 @@ type config struct {
 	MaxRooms         int    `json:"max_rooms,omitempty"`
 	MaxUsersPerRoom  int    `json:"max_users_per_room,omitempty"`
 	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
-	DbFileEnable     bool   `json:"db_file_enable"`
 	LogFileEnable    bool   `json:"log_file_enable"`
+	DbFileEnable     bool   `json:"db_file_enable"`
 	Root             User   `json:"root,omitempty"`
 }
 
@@ -44,8 +44,8 @@ func NewDefaultConfig() *Config {
 			MaxRooms:         200,
 			MaxUsersPerRoom:  100,
 			MaxRoomsPerAdmin: 10,
-			DbFileEnable:     true,
 			LogFileEnable:    true,
+			DbFileEnable:     true,
 			Root:             User{Uid: "root", Pwd: "19971213"},
 		},
 	}
@@ -81,16 +81,16 @@ func (c *Config) MaxRoomsPerAdmin() int {
 	return c.cfg.MaxRoomsPerAdmin
 }
 
-func (c *Config) DbFileEnable() bool {
-	c.rwMu.RLock()
-	defer c.rwMu.RUnlock()
-	return c.cfg.DbFileEnable
-}
-
 func (c *Config) LogFileEnable() bool {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.LogFileEnable
+}
+
+func (c *Config) DbFileEnable() bool {
+	c.rwMu.RLock()
+	defer c.rwMu.RUnlock()
+	return c.cfg.DbFileEnable
 }
 
 func (c *Config) Root() User {
@@ -128,16 +128,16 @@ func (c *Config) SetMaxRoomsPerAdmin(maxRoomsPerAdmin int) {
 	c.cfg.MaxRoomsPerAdmin = maxRoomsPerAdmin
 }
 
-func (c *Config) SetDbFileEnable(dbFileEnable bool) {
-	c.rwMu.Lock()
-	defer c.rwMu.Unlock()
-	c.cfg.DbFileEnable = dbFileEnable
-}
-
 func (c *Config) SetLogFileEnable(logFileEnable bool) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.LogFileEnable = logFileEnable
+}
+
+func (c *Config) SetDbFileEnable(dbFileEnable bool) {
+	c.rwMu.Lock()
+	defer c.rwMu.Unlock()
+	c.cfg.DbFileEnable = dbFileEnable
 }
 
 func (c *Config) SetRoot(pwd string) {

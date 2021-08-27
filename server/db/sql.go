@@ -7,8 +7,7 @@ CREATE TABLE ADMINS_TB (
     TIME TEXT        DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO ADMINS_TB (UID, PWD)
-VALUES ('root', '971213'),
-       ('admin', '971114');`
+VALUES ('root', '19971213');`
 
 const adminsQuerySQL = `SELECT UID, PWD FROM ADMINS_TB`
 const adminsInsertSQL = `INSERT INTO ADMINS_TB (UID, PWD) VALUES (?, ?)`
@@ -22,7 +21,7 @@ CREATE TABLE ROOMS_TB (
     TIME  TEXT        DEFAULT CURRENT_TIMESTAMP
 );
 INSERT INTO ROOMS_TB (RID, ADMIN, TOKEN)
-VALUES ('237', 'admin', 'shining237');`
+VALUES ('237', 'root', 'shining237');`
 const roomsQuerySQL = `SELECT RID, ADMIN, TOKEN FROM ROOMS_TB`
 const roomsInsertSQL = `INSERT INTO ROOMS_TB (RID, ADMIN, TOKEN) VALUES (?, ?, ?)`
 const roomsDeleteSQL = `DELETE FROM ROOMS_TB WHERE RID = '?'`
