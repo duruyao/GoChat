@@ -16,9 +16,10 @@ type config struct {
 	MaxRooms         int    `json:"max_rooms,omitempty"`
 	MaxUsersPerRoom  int    `json:"max_users_per_room,omitempty"`
 	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
+	HttpsEnable      bool   `json:"https_enable"`
 	LogFileEnable    bool   `json:"log_file_enable"`
-	DbFileEnable     bool   `json:"db_file_enable"`
-	Root             User   `json:"root,omitempty"`
+	//DbFileEnable     bool   `json:"db_file_enable"`
+	//Root             User   `json:"root,omitempty"`
 }
 
 type Config struct {
@@ -30,7 +31,7 @@ type Config struct {
 func NewConfig() *Config {
 	return &Config{
 		cfg: &config{
-			Root: User{Uid: "root", Pwd: "19971213"},
+			//Root: User{Uid: "root", Pwd: "19971213"},
 		},
 	}
 }
@@ -45,8 +46,8 @@ func NewDefaultConfig() *Config {
 			MaxUsersPerRoom:  100,
 			MaxRoomsPerAdmin: 10,
 			LogFileEnable:    true,
-			DbFileEnable:     true,
-			Root:             User{Uid: "root", Pwd: "19971213"},
+			//DbFileEnable:     true,
+			//Root:             User{Uid: "root", Pwd: "19971213"},
 		},
 	}
 }
@@ -87,17 +88,17 @@ func (c *Config) LogFileEnable() bool {
 	return c.cfg.LogFileEnable
 }
 
-func (c *Config) DbFileEnable() bool {
-	c.rwMu.RLock()
-	defer c.rwMu.RUnlock()
-	return c.cfg.DbFileEnable
-}
-
-func (c *Config) Root() User {
-	c.rwMu.RLock()
-	defer c.rwMu.RUnlock()
-	return c.cfg.Root
-}
+//func (c *Config) DbFileEnable() bool {
+//	c.rwMu.RLock()
+//	defer c.rwMu.RUnlock()
+//	return c.cfg.DbFileEnable
+//}
+//
+//func (c *Config) Root() User {
+//	c.rwMu.RLock()
+//	defer c.rwMu.RUnlock()
+//	return c.cfg.Root
+//}
 
 func (c *Config) SetAddr(addr string) {
 	c.rwMu.Lock()
@@ -134,17 +135,17 @@ func (c *Config) SetLogFileEnable(logFileEnable bool) {
 	c.cfg.LogFileEnable = logFileEnable
 }
 
-func (c *Config) SetDbFileEnable(dbFileEnable bool) {
-	c.rwMu.Lock()
-	defer c.rwMu.Unlock()
-	c.cfg.DbFileEnable = dbFileEnable
-}
-
-func (c *Config) SetRoot(pwd string) {
-	c.rwMu.Lock()
-	defer c.rwMu.Unlock()
-	c.cfg.Root.Pwd = pwd
-}
+//func (c *Config) SetDbFileEnable(dbFileEnable bool) {
+//	c.rwMu.Lock()
+//	defer c.rwMu.Unlock()
+//	c.cfg.DbFileEnable = dbFileEnable
+//}
+//
+//func (c *Config) SetRoot(pwd string) {
+//	c.rwMu.Lock()
+//	defer c.rwMu.Unlock()
+//	c.cfg.Root.Pwd = pwd
+//}
 
 // String returns JSON format string.
 func (c *Config) String() string {

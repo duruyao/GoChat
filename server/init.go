@@ -44,15 +44,13 @@ func init() {
 	go GoRefreshLogFiles()
 
 	// init database file
-	if MyConfig.DbFileEnable() {
-		if db.IsNotExist() {
-			if err := db.CreateDB(); err != nil {
-				mlog.FatalLn(err)
-			}
-		}
-		if err := db.OpenDB(); err != nil {
+	if db.IsNotExist() {
+		if err := db.CreateDB(); err != nil {
 			mlog.FatalLn(err)
 		}
-		BeforeQuit.Append(db.CloseDB)
 	}
+	if err := db.OpenDB(); err != nil {
+		mlog.FatalLn(err)
+	}
+	BeforeQuit.Append(db.CloseDB)
 }

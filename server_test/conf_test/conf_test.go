@@ -31,7 +31,7 @@ func TestConfReadwrite(t *testing.T) {
 	}
 	t.Log(config.String())
 	config.SetMaxUsers(30000)
-	config.SetRoot("12345678")
+	config.SetMaxRoomsPerAdmin(30)
 	if err := conf.WriteFile(config); err != nil {
 		t.Fatal(err)
 	}
