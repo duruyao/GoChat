@@ -30,7 +30,8 @@ func TestConfReadwrite(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Log(config.String())
-	config.AppendAdmins([]conf.User{{"admin1", "123456"}, {"admin2", "654321"}}...)
+	config.SetMaxUsers(30000)
+	config.SetRoot("12345678")
 	if err := conf.WriteFile(config); err != nil {
 		t.Fatal(err)
 	}
