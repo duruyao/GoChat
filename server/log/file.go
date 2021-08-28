@@ -2,7 +2,6 @@ package log
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"sync"
 	"time"
@@ -22,12 +21,12 @@ var files = map[string]*os.File{ //
 var userHomeDirOnce sync.Once
 var userHomeDir string
 
-func UserHomeDir() string {
+func homeDir() string {
 	userHomeDirOnce.Do(func() {
 		var err error
 		userHomeDir, err = os.UserHomeDir()
 		if err != nil {
-			log.Fatalln(err)
+			FatalLn(err)
 		}
 	})
 	return userHomeDir
@@ -35,7 +34,7 @@ func UserHomeDir() string {
 
 // Dir returns '${HOME}/.GoChat/log'.
 func Dir() string {
-	return fmt.Sprintf(fileDirFmt, UserHomeDir(), time.Now().Format("2006-01-02"))
+	return fmt.Sprintf(fileDirFmt, homeDir(), time.Now().Format("2006-01-02"))
 }
 
 //

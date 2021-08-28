@@ -18,8 +18,6 @@ type config struct {
 	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
 	HttpsEnable      bool   `json:"https_enable"`
 	LogFileEnable    bool   `json:"log_file_enable"`
-	//DbFileEnable     bool   `json:"db_file_enable"`
-	//Root             User   `json:"root,omitempty"`
 }
 
 type Config struct {

@@ -2,8 +2,8 @@ package conf
 
 import (
 	"fmt"
+	mlog "github.com/duruyao/gochat/server/log"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -19,7 +19,7 @@ func Path() string {
 	pathOnce.Do(func() {
 		userHomeDir, err := os.UserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			mlog.FatalLn(err)
 		}
 		path = fmt.Sprintf(filePathFmt, userHomeDir)
 	})

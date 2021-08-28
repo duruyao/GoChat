@@ -3,8 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	mlog "github.com/duruyao/gochat/server/log"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -20,7 +20,7 @@ func Path() string {
 	pathOnce.Do(func() {
 		userHomeDir, err := os.UserHomeDir()
 		if err != nil {
-			log.Fatal(err)
+			mlog.FatalLn(err)
 		}
 		path = fmt.Sprintf(filePathFmt, userHomeDir)
 	})
