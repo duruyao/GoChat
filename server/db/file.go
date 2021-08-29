@@ -69,11 +69,13 @@ func CreateDB() (err error) {
 	return err
 }
 
+//
 func OpenDB() (err error) {
 	db, err = sql.Open("sqlite3", Path())
 	return err
 }
 
+//
 func CloseDB() error {
 	return db.Close()
 }

@@ -16,6 +16,7 @@ const crtPathFmt = "%s/.server.crt"
 var dirOnce sync.Once
 var dir string
 
+//
 func Dir() string {
 	dirOnce.Do(func() {
 		userHomeDir, err := os.UserHomeDir()
@@ -27,24 +28,38 @@ func Dir() string {
 	return dir
 }
 
-func Paths() [2]string {
+//
+func AllPaths() [2]string {
 	return [2]string{fmt.Sprintf(keyPathFmt, Dir()), fmt.Sprintf(crtPathFmt, Dir())}
 }
 
+//
+func Path(name string) string {
+	if "crt" == name {
+		return fmt.Sprintf(crtPathFmt, Dir())
+	} else if "key" == name {
+		return fmt.Sprintf(keyPathFmt, Dir())
+	}
+	return ""
+}
+
+//
 func AreExist() bool {
 	return !AreNotExist()
 }
 
+//
 func AreNotExist() bool {
-	if _, err := os.Stat(Paths()[0]); os.IsNotExist(err) {
+	if _, err := os.Stat(AllPaths()[0]); os.IsNotExist(err) {
 		return true
 	}
-	if _, err := os.Stat(Paths()[1]); os.IsNotExist(err) {
+	if _, err := os.Stat(AllPaths()[1]); os.IsNotExist(err) {
 		return true
 	}
 	return false
 }
 
+//
 func projectDir() string {
 	dir, err := os.Getwd()
 	if err != nil {

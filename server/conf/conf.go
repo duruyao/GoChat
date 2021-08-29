@@ -47,83 +47,97 @@ func NewDefaultConfig() *Config {
 	}
 }
 
+//
 func (c *Config) Addr() string {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.Addr
 }
 
+//
 func (c *Config) MaxUsers() int {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.MaxUsers
 }
 
+//
 func (c *Config) MaxRooms() int {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.MaxRooms
 }
 
+//
 func (c *Config) MaxUsersPreRoom() int {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.MaxUsersPerRoom
 }
 
+//
 func (c *Config) MaxRoomsPerAdmin() int {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.MaxRoomsPerAdmin
 }
 
+//
 func (c *Config) LogFileEnable() bool {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.LogFileEnable
 }
 
+//
 func (c *Config) HttpsEnable() bool {
 	c.rwMu.RLock()
 	defer c.rwMu.RUnlock()
 	return c.cfg.HttpsEnable
 }
 
+//
 func (c *Config) SetAddr(addr string) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.Addr = addr
 }
 
+//
 func (c *Config) SetMaxUsers(maxUsers int) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.MaxUsers = maxUsers
 }
+//
 func (c *Config) SetMaxRooms(maxRooms int) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.MaxRooms = maxRooms
 }
 
+//
 func (c *Config) SetMaxUsersPreRoom(maxUsersPreRoom int) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.MaxUsersPerRoom = maxUsersPreRoom
 }
 
+//
 func (c *Config) SetMaxRoomsPerAdmin(maxRoomsPerAdmin int) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.MaxRoomsPerAdmin = maxRoomsPerAdmin
 }
 
+//
 func (c *Config) SetLogFileEnable(logFileEnable bool) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()
 	c.cfg.LogFileEnable = logFileEnable
 }
 
+//
 func (c *Config) SetHttpsEnable(httpsEnable bool) {
 	c.rwMu.Lock()
 	defer c.rwMu.Unlock()

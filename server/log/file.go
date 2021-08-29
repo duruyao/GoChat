@@ -21,6 +21,7 @@ var files = map[string]*os.File{ //
 var userHomeDirOnce sync.Once
 var userHomeDir string
 
+//
 func homeDir() string {
 	userHomeDirOnce.Do(func() {
 		var err error

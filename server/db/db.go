@@ -14,6 +14,7 @@ type Room struct {
 	Token string `json:"token"`
 }
 
+//
 func (t *RoomsTable) Query() ([]Room, error) {
 	var rooms []Room
 	rows, err := db.Query(roomsQuerySQL)
@@ -34,6 +35,7 @@ func (t *RoomsTable) Query() ([]Room, error) {
 	return rooms, nil
 }
 
+//
 func (t *RoomsTable) Insert(room Room) (err error) {
 	var stmt *sql.Stmt
 	//stmt, e = db.Prepare(roomsCreateSQL)
@@ -51,6 +53,7 @@ func (t *RoomsTable) Insert(room Room) (err error) {
 	return err
 }
 
+//
 func (t *RoomsTable) Delete(rid string) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = db.Prepare(roomsDeleteSQL) // avoid SQL injections
@@ -64,6 +67,7 @@ func (t *RoomsTable) Delete(rid string) (err error) {
 	return err
 }
 
+//
 func (t *RoomsTable) ExecOneSQL(query string, args ...interface{}) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = db.Prepare(query) // avoid SQL injections
@@ -86,6 +90,7 @@ type Admin User
 
 type AdminsTable struct{}
 
+//
 func (t *AdminsTable) Query() ([]Admin, error) {
 	var admins []Admin
 	rows, err := db.Query(adminsQuerySQL)
@@ -106,6 +111,7 @@ func (t *AdminsTable) Query() ([]Admin, error) {
 	return admins, nil
 }
 
+//
 func (t *AdminsTable) Insert(admin Admin) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = db.Prepare(adminsInsertSQL) // avoid SQL injections
@@ -119,6 +125,7 @@ func (t *AdminsTable) Insert(admin Admin) (err error) {
 	return err
 }
 
+//
 func (t *AdminsTable) Delete(uid string) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = db.Prepare(adminsDeleteSQL) // avoid SQL injections
@@ -132,6 +139,7 @@ func (t *AdminsTable) Delete(uid string) (err error) {
 	return err
 }
 
+//
 func (t *AdminsTable) ExecOneSQL(query string, args ...interface{}) (err error) {
 	var stmt *sql.Stmt
 	stmt, err = db.Prepare(query) // avoid SQL injections
@@ -145,6 +153,7 @@ func (t *AdminsTable) ExecOneSQL(query string, args ...interface{}) (err error) 
 	return err
 }
 
+//
 func createRoomsTable() error {
 	if _, err := db.Exec(roomsCreateSQL); err != nil {
 		return err
@@ -152,6 +161,7 @@ func createRoomsTable() error {
 	return nil
 }
 
+//
 func createAdminsTable() error {
 	if _, err := db.Exec(adminsCreateSQL); err != nil {
 		return err
