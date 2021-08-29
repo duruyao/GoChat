@@ -15,6 +15,7 @@ type Message struct {
 	*message
 }
 
+//
 func NewMessage(sender string, content string) *Message {
 	return &Message{
 		&message{
@@ -24,6 +25,7 @@ func NewMessage(sender string, content string) *Message {
 	}
 }
 
+//
 func (m *Message) String() string {
 	if js, err := json.MarshalIndent(m.message, "", "    "); err != nil {
 		return err.Error()
@@ -32,6 +34,7 @@ func (m *Message) String() string {
 	}
 }
 
+//
 func (m *Message) Serialize() string {
 	if js, err := json.Marshal(m.message); err != nil {
 		return err.Error()
@@ -40,6 +43,7 @@ func (m *Message) Serialize() string {
 	}
 }
 
+//
 func (m *Message) Parse(js []byte) error {
 	if len(js) == 0 {
 		return nil

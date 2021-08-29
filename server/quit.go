@@ -11,12 +11,14 @@ type beforeQuit struct {
 	funcs  []func() error
 }
 
+//
 func (bq *beforeQuit) Append(f func() error) {
 	bq.mu.Lock()
 	defer bq.mu.Unlock()
 	bq.funcs = append(bq.funcs, f)
 }
 
+//
 func (bq *beforeQuit) Do() {
 	bq.doOnce.Do(func() {
 		for _, f := range bq.funcs {
@@ -31,8 +33,10 @@ var BeforeQuit beforeQuit
 
 var quit = make(chan struct{})
 
+//
 func Quit() <-chan struct{} { return quit }
 
+//
 func IsQuit() bool {
 	select {
 	case <-quit:
@@ -44,6 +48,7 @@ func IsQuit() bool {
 
 var wantQuitOnce sync.Once
 
+//
 func WantQuit() {
 	wantQuitOnce.Do(func() { close(quit) })
 }

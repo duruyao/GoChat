@@ -22,6 +22,7 @@ func GoRefreshLogFiles() {
 	go GoRefreshLogFiles()
 }
 
+//
 func refreshLogFiles() {
 	if err := mlog.CloseFiles(); err != nil {
 		log.Fatalln(err)

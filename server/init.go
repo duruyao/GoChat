@@ -13,6 +13,7 @@ var (
 	MyAdminsTable = new(db.AdminsTable)
 )
 
+//
 func init() {
 	// init configuration file
 	if conf.IsNotExist() {
