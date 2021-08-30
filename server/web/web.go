@@ -4,55 +4,70 @@ import (
 	"github.com/duruyao/gochat/server/key"
 	mlog "github.com/duruyao/gochat/server/log"
 	"html/template"
+	"io/ioutil"
 	"net/http"
-	"sync"
+	"path/filepath"
 )
 
-func joinRoomHandle(w http.ResponseWriter, r *http.Request, tmpl *template.Template, filename string) {
-	data := struct {
-		Rid string
-	}{r.FormValue("rid")}
-	if err := tmpl.ExecuteTemplate(w, filename, &data); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+type PageData struct {
+	HttpAddr string
+	Rid      string
 }
 
-func simpleHandle(w http.ResponseWriter, r *http.Request, tmpl *template.Template, filename string) {
-	if err := tmpl.ExecuteTemplate(w, filename, nil); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+func makeHtmlHandler(tmpl *template.Template, filename string) http.HandlerFunc {
+	if "join_room.html" == filename {
+		return func(w http.ResponseWriter, r *http.Request) {
+			rid := r.FormValue("rid")
+			if len(rid) < 1 {
+				http.Error(w, "no rid specified", http.StatusBadRequest)
+				return
+			}
+			data := PageData{Rid: rid}
+			if err := tmpl.ExecuteTemplate(w, filename, data); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+		}
 	}
-}
-
-func makeHandler(handleFunc func(http.ResponseWriter, *http.Request, *template.Template, string), tmpl *template.Template, filename string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		handleFunc(w, r, tmpl, filename)
+		data := PageData{}
+		if err := tmpl.ExecuteTemplate(w, filename, data); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
-var httpServiceOnce sync.Once
+func makeSourceHandler(filepath string) http.HandlerFunc {
+	content, _ := ioutil.ReadFile(filepath)
+	return func(w http.ResponseWriter, r *http.Request) {
+		if len(content) < 1 {
+			http.Error(w, "empty content", http.StatusInternalServerError)
+		}
+		if _, err := w.Write(content); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+}
 
 func GoHttpService(addr string) {
-	httpServiceOnce.Do(func() {
-		tmpl := template.Must(template.ParseFiles(AllHtmlPaths()...))
-		http.HandleFunc("/sign_in", makeHandler(simpleHandle, tmpl, "sign_in.html"))
-		http.HandleFunc("/change_pwd", makeHandler(simpleHandle, tmpl, "change_pwd.html"))
-		http.HandleFunc("/add_admin", makeHandler(simpleHandle, tmpl, "add_admin.html"))
-		http.HandleFunc("/add_room", makeHandler(simpleHandle, tmpl, "add_room.html"))
-		http.HandleFunc("/join_room", makeHandler(joinRoomHandle, tmpl, "join_room.html"))
-		mlog.FatalLn(http.ListenAndServe(addr, nil))
-	})
+	for _, path := range AllSourcePaths() {
+		http.Handle("/"+filepath.Base(path), makeSourceHandler(path))
+	}
+	tmpl := template.Must(template.ParseFiles(AllHtmlPaths()...))
+	http.Handle("/", makeHtmlHandler(tmpl, "sign_in.html"))
+	for _, path := range AllHtmlPaths() {
+		http.Handle("/"+filenameWithoutExt(path), makeHtmlHandler(tmpl, filepath.Base(path)))
+	}
+	mlog.FatalLn(http.ListenAndServe(addr, nil))
 }
 
-var httpServicesOnce sync.Once
-
 func GoHttpsService(addr string) {
-	httpServicesOnce.Do(func() {
-		tmpl := template.Must(template.ParseFiles(AllHtmlPaths()...))
-		http.HandleFunc("/sign_in", makeHandler(simpleHandle, tmpl, "sign_in.html"))
-		http.HandleFunc("/change_pwd", makeHandler(simpleHandle, tmpl, "change_pwd.html"))
-		http.HandleFunc("/add_admin", makeHandler(simpleHandle, tmpl, "add_admin.html"))
-		http.HandleFunc("/add_room", makeHandler(simpleHandle, tmpl, "add_room.html"))
-		http.HandleFunc("/join_room", makeHandler(joinRoomHandle, tmpl, "join_room.html"))
-		mlog.FatalLn(http.ListenAndServeTLS(addr, key.Path("crt"), key.Path("key"), nil))
-	})
+	for _, path := range AllSourcePaths() {
+		http.Handle("/"+filepath.Base(path), makeSourceHandler(path))
+	}
+	tmpl := template.Must(template.ParseFiles(AllHtmlPaths()...))
+	http.Handle("/", makeHtmlHandler(tmpl, "sign_in.html"))
+	for _, path := range AllHtmlPaths() {
+		http.Handle("/"+filenameWithoutExt(path), makeHtmlHandler(tmpl, filepath.Base(path)))
+	}
+	mlog.FatalLn(http.ListenAndServeTLS(addr, key.Path("crt"), key.Path("key"), nil))
 }
