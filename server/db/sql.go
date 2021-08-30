@@ -11,7 +11,9 @@ VALUES ('root', '19971213');`
 
 const adminsQuerySQL = `SELECT UID, PWD FROM ADMINS_TB`
 const adminsInsertSQL = `INSERT INTO ADMINS_TB (UID, PWD) VALUES (?, ?)`
-const adminsDeleteSQL = `DELETE FROM ADMINS_TB WHERE UID = '?'`
+const adminsDeleteSQL = `DELETE FROM ADMINS_TB WHERE UID = ?`
+
+//const adminsDeleteSQL = `DELETE FROM ADMINS_TB WHERE UID = '?'` // NOTE: sql: expected 0 arguments, got 1
 
 const roomsCreateSQL = `DROP TABLE IF EXISTS ROOMS_TB;
 CREATE TABLE ROOMS_TB (
@@ -24,4 +26,6 @@ INSERT INTO ROOMS_TB (RID, ADMIN, TOKEN)
 VALUES ('237', 'root', 'shining237');`
 const roomsQuerySQL = `SELECT RID, ADMIN, TOKEN FROM ROOMS_TB`
 const roomsInsertSQL = `INSERT INTO ROOMS_TB (RID, ADMIN, TOKEN) VALUES (?, ?, ?)`
-const roomsDeleteSQL = `DELETE FROM ROOMS_TB WHERE RID = '?'`
+const roomsDeleteSQL = `DELETE FROM ROOMS_TB WHERE RID = ?`
+
+//const roomsDeleteSQL = `DELETE FROM ROOMS_TB WHERE RID = '?'` // NOTE: sql: expected 0 arguments, got 1
