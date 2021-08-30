@@ -9,9 +9,9 @@ func TestAllHtmlPaths(t *testing.T) {
 }
 
 func TestGoHttpServer(t *testing.T) {
-	GoHttpService(":1213")
+	GoHttpService(":8080")
 }
 
 func TestGoHttpsService(t *testing.T) {
-	GoHttpsService(":1213")
+	GoHttpsService(":8181")
 }
