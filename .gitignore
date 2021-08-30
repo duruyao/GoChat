@@ -2,9 +2,7 @@
 *.idea/
 
 # Temp files
-gochat_old/
-server_old/
-tmp_bin/
+tmp_*/
 *.swp
 *~
 
