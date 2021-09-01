@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"github.com/duruyao/gochat/server/util"
+	"log"
 	"os"
 	"time"
 )
@@ -37,7 +38,7 @@ func IsNotExist() bool {
 }
 
 //
-func CreateFiles() (err error) {
+func createFiles() (err error) {
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
 		if err = os.MkdirAll(Dir(), os.ModePerm); err != nil {
 			return err
@@ -53,7 +54,7 @@ func CreateFiles() (err error) {
 }
 
 //
-func OpenFiles() (err error) {
+func openFiles() (err error) {
 	for name, f := range files {
 		if nil != f {
 			continue
@@ -66,7 +67,7 @@ func OpenFiles() (err error) {
 }
 
 //
-func CloseFiles() error {
+func closeFiles() error {
 	for _, f := range files {
 		if f != nil {
 			if err := f.Close(); err != nil {
@@ -75,4 +76,21 @@ func CloseFiles() error {
 		}
 	}
 	return nil
+}
+
+//
+func goRefreshFiles() {
+	duration := util.Tomorrow().Sub(time.Now())
+	select {
+	// TODO: add case <-quit: closeFiles()
+	case <-time.After(duration):
+		if err := closeFiles(); err != nil {
+			log.Fatalln(err)
+		}
+		if err := createFiles(); err != nil {
+			log.Fatalln(err)
+		}
+		refreshLogger()
+	}
+	go goRefreshFiles()
 }

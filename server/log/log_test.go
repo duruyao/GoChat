@@ -6,11 +6,11 @@ import (
 )
 
 func TestCreateFiles(t *testing.T) {
-	if err := CreateFiles(); err != nil {
+	if err := createFiles(); err != nil {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err := CloseFiles(); err != nil {
+		if err := closeFiles(); err != nil {
 			t.Fatal(err)
 		}
 	}()
@@ -23,11 +23,11 @@ func TestCreateFiles(t *testing.T) {
 }
 
 func TestOpenFiles(t *testing.T) {
-	if err := OpenFiles(); err != nil {
+	if err := openFiles(); err != nil {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err := CloseFiles(); err != nil {
+		if err := closeFiles(); err != nil {
 			t.Fatal(err)
 		}
 	}()
