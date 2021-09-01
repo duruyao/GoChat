@@ -55,3 +55,23 @@ func UserHomeDir() string {
 	})
 	return userHomeDir
 }
+
+var quit = make(chan struct{})
+
+//
+func Quit() <-chan struct{} { return quit }
+
+//
+func IsQuit() bool {
+	select {
+	case <-quit:
+		return true
+	default:
+		return false
+	}
+}
+
+var quitOnce sync.Once
+
+//
+func SetQuit() { quitOnce.Do(func() { close(quit) }) }

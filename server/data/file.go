@@ -15,7 +15,7 @@ const filePathFmt = "%s/.GoChat/db/gochat.db"
 var pathOnce sync.Once
 var path string
 
-// Path returns '${HOME}/.GoChat/db/gochat.db'.
+// Path returns '$HOME/.GoChat/db/gochat.db'.
 func Path() string {
 	pathOnce.Do(func() {
 		userHomeDir, err := os.UserHomeDir()
@@ -27,13 +27,13 @@ func Path() string {
 	return path
 }
 
-// Dir returns '${HOME}/.GoChat/db'.
+// Dir returns '$HOME/.GoChat/db'.
 func Dir() string { return filepath.Dir(Path()) }
 
-// IsExist returns true if the file '${HOME}/.GoChat/db/gochat.db' exists, otherwise false.
+// IsExist returns true if the file '$HOME/.GoChat/db/gochat.db' exists, otherwise false.
 func IsExist() bool { return !IsNotExist() }
 
-// IsNotExist returns true if the file '${HOME}/.GoChat/db/gochat.db' doesn't exists, otherwise false.
+// IsNotExist returns true if the file '$HOME/.GoChat/db/gochat.db' doesn't exists, otherwise false.
 func IsNotExist() bool {
 	if _, err := os.Stat(Path()); os.IsNotExist(err) {
 		return true
@@ -41,7 +41,7 @@ func IsNotExist() bool {
 	return false
 }
 
-// CreateDB creates a new path '${HOME}/.GoChat/db/gochat.db'.
+// CreateDB creates a new path '$HOME/.GoChat/db/gochat.db'.
 func CreateDB() (err error) {
 	var file *os.File
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
