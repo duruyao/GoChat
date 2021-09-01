@@ -3,7 +3,6 @@ package log
 import (
 	"fmt"
 	"github.com/duruyao/gochat/server/util"
-	"log"
 	"os"
 	"time"
 )
@@ -76,21 +75,4 @@ func closeFiles() error {
 		}
 	}
 	return nil
-}
-
-//
-func goRefreshFiles() {
-	duration := util.Tomorrow().Sub(time.Now())
-	select {
-	// TODO: add case <-quit: closeFiles()
-	case <-time.After(duration):
-		if err := closeFiles(); err != nil {
-			log.Fatalln(err)
-		}
-		if err := createFiles(); err != nil {
-			log.Fatalln(err)
-		}
-		refreshLogger()
-	}
-	go goRefreshFiles()
 }

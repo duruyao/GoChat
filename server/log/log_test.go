@@ -1,6 +1,7 @@
 package log
 
 import (
+	"github.com/duruyao/gochat/server/util"
 	"testing"
 	"time"
 )
@@ -10,9 +11,7 @@ func TestCreateFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err := closeFiles(); err != nil {
-			t.Fatal(err)
-		}
+		util.SetQuit()
 	}()
 	DebugLn("i am DebugLn()")
 	DebugF("i am %s\n", "DebugF()")
@@ -27,9 +26,7 @@ func TestOpenFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err := closeFiles(); err != nil {
-			t.Fatal(err)
-		}
+		util.SetQuit()
 	}()
 	DebugLn("i am a new DebugLn()")
 	DebugF("i am a new %s\n", "DebugF()")
@@ -40,11 +37,10 @@ func TestOpenFiles(t *testing.T) {
 }
 
 func TestInit(t *testing.T) {
-	quit := make(chan struct{})
 	go func() {
 		select {
 		case <-time.After(1 * time.Hour):
-			close(quit)
+			util.SetQuit()
 		}
 	}()
 loop:
@@ -53,7 +49,7 @@ loop:
 		case <-time.After(time.Minute):
 			timeStr := time.Now().Format("2006-01-02 03:04:05")
 			DebugLn("Current time: " + timeStr)
-		case <-quit:
+		case <-util.Quit():
 			break loop
 		}
 	}
