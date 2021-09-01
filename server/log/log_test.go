@@ -1,6 +1,9 @@
 package log
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestCreateFiles(t *testing.T) {
 	if err := CreateFiles(); err != nil {
@@ -34,4 +37,24 @@ func TestOpenFiles(t *testing.T) {
 	InfoF("i am a new %s\n", "InfoF()")
 	ErrorLn("i am a new ErrorLn()")
 	ErrorF("i am a new %s\n", "ErrorF()")
+}
+
+func TestInit(t *testing.T) {
+	quit := make(chan struct{})
+	go func() {
+		select {
+		case <-time.After(1 * time.Hour):
+			close(quit)
+		}
+	}()
+loop:
+	for {
+		select {
+		case <-time.After(time.Minute):
+			timeStr := time.Now().Format("2006-01-02 03:04:05")
+			DebugLn("Current time: " + timeStr)
+		case <-quit:
+			break loop
+		}
+	}
 }

@@ -2,12 +2,10 @@ package log
 
 import (
 	"fmt"
+	"github.com/duruyao/gochat/server/util"
 	"os"
-	"sync"
 	"time"
 )
-
-const fileDirFmt = "%s/.GoChat/log/%s"
 
 var files = map[string]*os.File{ //
 	"all":   nil,
@@ -18,38 +16,18 @@ var files = map[string]*os.File{ //
 	"fatal": nil,
 }
 
-var userHomeDirOnce sync.Once
-var userHomeDir string
-
-//
-func homeDir() string {
-	userHomeDirOnce.Do(func() {
-		var err error
-		userHomeDir, err = os.UserHomeDir()
-		if err != nil {
-			FatalLn(err)
-		}
-	})
-	return userHomeDir
-}
-
-// Dir returns '${HOME}/.GoChat/log'.
+// Dir returns "$HOME/.GoChat/log/yyyy-mm-dd".
 func Dir() string {
-	return fmt.Sprintf(fileDirFmt, homeDir(), time.Now().Format("2006-01-02"))
+	return fmt.Sprintf("%s/.GoChat/log/%s", util.UserHomeDir(), time.Now().Format("2006-01-02"))
 }
 
-//
+// Path returns "$HOME/.GoChat/log/yyyy-mm-dd/name.log".
 func Path(name string) string {
 	return Dir() + "/" + name + ".log"
 }
 
 //
-func AreExist() bool {
-	return !AreNotExist()
-}
-
-//
-func AreNotExist() bool {
+func IsNotExist() bool {
 	for name := range files {
 		if _, err := os.Stat(Path(name)); os.IsNotExist(err) {
 			return true

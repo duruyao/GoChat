@@ -21,7 +21,7 @@ var (
 var refreshLoggerOnce sync.Once
 
 //
-func RefreshLogger() {
+func refreshLogger() {
 	debugLogger = log.New(io.MultiWriter(os.Stdout, files["all"], files["debug"]), "[debug] ", flags)
 	infoLogger = log.New(io.MultiWriter(os.Stdout, files["all"], files["info"]), "[info ] ", flags)
 	errorLogger = log.New(io.MultiWriter(os.Stderr, files["all"], files["error"]), "[error] ", flags)
@@ -31,43 +31,43 @@ func RefreshLogger() {
 
 //
 func Debug(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = debugLogger.Output(2, fmt.Sprint(v...))
 }
 
 //
 func DebugF(format string, v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = debugLogger.Output(2, fmt.Sprintf(format, v...))
 }
 
 //
 func DebugLn(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = debugLogger.Output(2, fmt.Sprintln(v...))
 }
 
 //
 func Info(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = infoLogger.Output(2, fmt.Sprint(v...))
 }
 
 //
 func InfoF(format string, v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = infoLogger.Output(2, fmt.Sprintf(format, v...))
 }
 
 //
 func InfoLn(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = infoLogger.Output(2, fmt.Sprintln(v...))
 }
 
 //
 func Panic(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	s := fmt.Sprint(v...)
 	_ = panicLogger.Output(2, s)
 	panic(s)
@@ -75,7 +75,7 @@ func Panic(v ...interface{}) {
 
 //
 func PanicF(format string, v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	s := fmt.Sprintf(format, v...)
 	_ = panicLogger.Output(2, s)
 	panic(s)
@@ -83,7 +83,7 @@ func PanicF(format string, v ...interface{}) {
 
 //
 func PanicLn(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	s := fmt.Sprintln(v...)
 	_ = panicLogger.Output(2, s)
 	panic(s)
@@ -91,19 +91,19 @@ func PanicLn(v ...interface{}) {
 
 //
 func Error(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = errorLogger.Output(2, fmt.Sprint(v...))
 }
 
 //
 func ErrorF(format string, v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = errorLogger.Output(2, fmt.Sprintf(format, v...))
 }
 
 //
 func ErrorLn(v ...interface{}) {
-	refreshLoggerOnce.Do(RefreshLogger)
+	refreshLoggerOnce.Do(refreshLogger)
 	_ = errorLogger.Output(2, fmt.Sprintln(v...))
 }
 
