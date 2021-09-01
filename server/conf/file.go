@@ -2,48 +2,28 @@ package conf
 
 import (
 	"fmt"
-	mlog "github.com/duruyao/gochat/server/log"
+	"github.com/duruyao/gochat/server/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"sync"
 )
 
-const filePathFmt = "%s/.GoChat/conf/gochat.conf"
+// Path returns '$HOME/.GoChat/conf/gochat.conf'.
+func Path() string { return fmt.Sprintf("%s/.GoChat/conf/gochat.conf", util.UserHomeDir()) }
 
-var pathOnce sync.Once
-var path string
-
-// Path returns '${HOME}/.GoChat/conf/gochat.conf'.
-func Path() string {
-	pathOnce.Do(func() {
-		userHomeDir, err := os.UserHomeDir()
-		if err != nil {
-			mlog.FatalLn(err)
-		}
-		path = fmt.Sprintf(filePathFmt, userHomeDir)
-	})
-	return path
-}
-
-// Dir returns '${HOME}/.GoChat'.
+// Dir returns '$HOME/.GoChat/conf'.
 func Dir() string { return filepath.Dir(Path()) }
 
-// IsExist returns true if the file '${HOME}/.GoChat/conf/gochat.conf' exists, otherwise false.
-func IsExist() bool {
-	if _, err := os.Stat(Path()); os.IsExist(err) {
+// IsNotExist returns true if the file '$HOME/.GoChat/conf/gochat.conf' doesn't exists, otherwise false.
+func IsNotExist() bool {
+	if _, err := os.Stat(Path()); os.IsNotExist(err) {
 		return true
 	}
 	return false
 }
 
-// IsNotExist returns true if the file '${HOME}/.GoChat/conf/gochat.conf' doesn't exists, otherwise false.
-func IsNotExist() bool {
-	return !IsExist()
-}
-
-// CreateFile creates a new path '${HOME}/.GoChat/conf/gochat.conf'.
-func CreateFile() (err error) {
+// createFile creates a new path '$HOME/.GoChat/conf/gochat.conf'.
+func createFile() (err error) {
 	var file *os.File
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
 		if err = os.MkdirAll(Dir(), os.ModePerm); err != nil {
@@ -58,8 +38,8 @@ func CreateFile() (err error) {
 	return err
 }
 
-// ReadFile reads a type Config from the file '${HOME}/.GoChat/conf/gochat.conf' to conf.
-func ReadFile(c *Config) error {
+// readFile reads a type Config from the file '$HOME/.GoChat/conf/gochat.conf' to conf.
+func readFile(c *config) error {
 	data, err := ioutil.ReadFile(Path())
 	if err != nil {
 		return err
@@ -67,7 +47,7 @@ func ReadFile(c *Config) error {
 	return c.Parse(data)
 }
 
-// WriteFile writes a type Config from conf to the new file '${HOME}/.GoChat/conf/gochat.conf'.
-func WriteFile(c *Config) error {
+// writeFile writes a type Config from conf to the new file '$HOME/.GoChat/conf/gochat.conf'.
+func writeFile(c *config) error {
 	return ioutil.WriteFile(Path(), []byte(c.String()), 0666)
 }
