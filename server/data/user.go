@@ -58,7 +58,7 @@ func (u *User) Create() (err error) {
 		return
 	}
 	defer func() { _ = tx.Commit() }()
-	u.UUId = util.CreateUUID()
+	u.UUId = util.CreateUUId()
 	u.CreatedAt = time.Now().Local()
 	_, err = tx.Exec(q1, u.UUId, u.Name, u.Email, util.Encrypt(u.Password), u.MaxRole, u.CreatedAt)
 	if err != nil {
@@ -109,7 +109,7 @@ func (u *User) CreateSession() (s Session, err error) {
 	}
 	defer func() { _ = tx.Commit() }()
 	s = Session{
-		UUId:      util.CreateUUID(),
+		UUId:      util.CreateUUId(),
 		UserId:    u.Id,
 		CreatedAt: time.Now().Local(),
 	}
@@ -136,7 +136,7 @@ func (u *User) CreateRoom(name string, token string) (r Room, err error) {
 	}
 	defer func() { _ = tx.Commit() }()
 	r = Room{
-		UUId:      util.CreateUUID(),
+		UUId:      util.CreateUUId(),
 		Name:      name,
 		UserId:    u.Id,
 		Token:     token,
@@ -169,7 +169,7 @@ func (u *User) CreatedRooms() (rs []Room, err error) {
 
 func (u *User) JoinRoom(r Room) (err error) {
 	q := `INSERT INTO JOIN_ROOM (UUID, ROOM_ID, USER_ID) VALUES ($1, $2, $3);`
-	_, err = db.Exec(q, util.CreateUUID(), r.Id, u.Id)
+	_, err = db.Exec(q, util.CreateUUId(), r.Id, u.Id)
 	return
 }
 
