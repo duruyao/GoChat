@@ -79,9 +79,9 @@ var quitOnce sync.Once
 //
 func SetQuit() { quitOnce.Do(func() { close(quit) }) }
 
-// CreateUUID creates a random UUID with from RFC 4122
+// CreateUUId creates a random UUID with from RFC 4122
 // adapted from http://github.com/nu7hatch/gouuid
-func CreateUUID() string {
+func CreateUUId() string {
 	u := new([16]byte)
 	_, err := rand.Read(u[:])
 	if err != nil {
