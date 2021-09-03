@@ -19,7 +19,7 @@ type Message struct {
 func NewMessage(sender string, content string) *Message {
 	return &Message{
 		&message{
-			Time:    time.Now().Format("2006-01-02 03-04-05"),
+			Time:    time.Now().Local().Format("2006-01-02 03-04-05"),
 			Sender:  sender,
 			Content: content},
 	}
