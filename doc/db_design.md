@@ -1,55 +1,59 @@
 # Database Design Scheme of GoChat
 
-## 1. GOCHAT_ADMINS
-
-### 1.1. Overview
-
-|  |  |
-| :-: | :-: |
-| **Table Name** | ADMINS_TB |
-| **Primary Key** | UID |
-| **Table Constraints** | / |
-
-### 1.2. Detail
-
-| Key | Type | Description| Column Constraints | Optional Value |
-| :-: | :-: | :-: | :-: | :-: |
-| UID | `VARCHAR(32)` | user's id | PRIMARY KEY | / |
-| PWD | `TEXT` | user's password | NOT NULL | / |
-| TIME | `TEXT` | timestamp of creating the user | DEFAULT CURRENT_TIMESTAMP | / |
+## 1. USERS Table.
 
 ```sql
-CREATE TABLE ADMINS_TB (
-    UID  VARCHAR(32) PRIMARY KEY,
-    PWD  TEXT        NOT NULL,
-    TIME TEXT        DEFAULT CURRENT_TIMESTAMP
-)
+CREATE TABLE USERS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    EMAIL      VARCHAR(255),
+    PASSWORD   TEXT CHECK ( MAX_ROLE > 3 OR PASSWORD IS NOT NULL ),
+    MAX_ROLE   INTEGER     NOT NULL DEFAULT 4,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))
+);
 ```
 
-## 2. GOCHAT_ROOMS
-
-### 2.1. Overview
-
-|  |  |
-| :-: | :-: |
-| **Table Name** | ROOMS_TB |
-| **Primary Key** | RID |
-| **Table Constraints** | / |
-
-### 2.2. Detail
-
-| Key | Type | Description| Column Constraints | Optional Value |
-| :-: | :-: | :-: | :-: | :-: |
-| RID | `VARCHAR(64)` | id of room | PRIMARY KEY | / |
-| ADMIN | `VARCHAR(32)` | administrator's id | REFERENCES ADMINS_TB(UID) | / |
-| TOKEN | `VARCHAR(20)` | token of room | NOT NULL | / |
-| TIME | `TEXT` | timestamp of creating the room | DEFAULT CURRENT_TIMESTAMP | / |
+## 2. ROOMS Table.
 
 ```sql
-CREATE TABLE ROOMS_TB (
-    RID   VARCHAR(64) PRIMARY KEY,
-    ADMIN VARCHAR(32) REFERENCES ADMINS_TB(UID),
-    TOKEN VARCHAR(20) NOT NULL,
-    TIME  TEXT        DEFAULT CURRENT_TIMESTAMP
-)
+CREATE TABLE ROOMS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
+    TOKEN      TEXT        NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
+```
+
+## 3. SESSIONS Table.
+
+```sql
+CREATE TABLE SESSIONS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
+```
+
+## 4. JOIN_ROOM Table.
+
+```sql
+CREATE TABLE JOIN_ROOM
+(
+    ID        INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID      VARCHAR(63) NOT NULL UNIQUE,
+    ROOM_ID   INTEGER     NOT NULL,
+    USER_ID   INTEGER     NOT NULL,
+    JOINED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (ROOM_ID) REFERENCES ROOMS (ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
 ```
