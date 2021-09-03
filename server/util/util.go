@@ -98,3 +98,8 @@ func CreateUUId() string {
 func Encrypt(plaintext string) string {
 	return fmt.Sprintf("%x", sha512.Sum512([]byte(plaintext)))
 }
+
+func WithoutExt(filename string) string {
+	name := filepath.Base(filename)
+	return name[:len(name)-len(filepath.Ext(name))]
+}
