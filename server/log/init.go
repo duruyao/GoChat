@@ -21,7 +21,7 @@ func init() {
 
 //
 func goRefreshFiles() {
-	duration := util.Tomorrow().Sub(time.Now())
+	duration := util.Tomorrow().Sub(time.Now().Local())
 	select {
 	case <-util.Quit():
 		if err := closeFiles(); err != nil {
