@@ -1,170 +1,117 @@
-package db
+package data
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/duruyao/gochat/server/util"
+	_ "github.com/mattn/go-sqlite3"
+	"os"
+	"path/filepath"
 )
 
 var db *sql.DB
 
-type RoomsTable struct{}
-
-type Room struct {
-	Rid   string `json:"room_id"`
-	Admin string `json:"admin_id"`
-	Token string `json:"token"`
+// DbPath returns '$HOME/.GoChat/data/gochat.sqlite'.
+func DbPath() string {
+	return fmt.Sprintf("%s/.GoChat/data/gochat.sqlite", util.UserHomeDir())
 }
 
-//
-func (t *RoomsTable) Query() ([]Room, error) {
-	var rooms []Room
-	rows, err := db.Query(roomsQuerySQL)
-	if err != nil {
-		return nil, err
+// DbDir returns '$HOME/.GoChat/data'.
+func DbDir() string {
+	return filepath.Dir(DbPath())
+}
+
+// IsNotExist returns true if the file '$HOME/.GoChat/data/gochat.sqlite' doesn't exists, otherwise false.
+func IsNotExist() bool {
+	if _, err := os.Stat(DbPath()); os.IsNotExist(err) {
+		return true
 	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		var room Room
-		if err := rows.Scan(&room.Rid, &room.Admin, &room.Token); err != nil {
-			return nil, err
+	return false
+}
+
+// createDb creates a new path '$HOME/.GoChat/data/gochat.sqlite'.
+func createDb() (err error) {
+	var file *os.File
+	if _, e := os.Stat(DbDir()); os.IsNotExist(e) {
+		if err = os.MkdirAll(DbDir(), os.ModePerm); err != nil {
+			return err
 		}
-		rooms = append(rooms, room)
 	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return rooms, nil
-}
-
-//
-func (t *RoomsTable) Insert(room Room) (err error) {
-	var stmt *sql.Stmt
-	//stmt, e = db.Prepare(roomsCreateSQL)
-	//if e != nil {
-	//	return e // TODO: note the bug: return err(nil) instead of e
-	//}
-	stmt, err = db.Prepare(roomsInsertSQL) // avoid SQL injections
+	file, err = os.Create(DbPath())
 	if err != nil {
-		return err
+		return
 	}
-	if _, err = stmt.Exec(room.Rid, room.Admin, room.Token); err != nil {
-		return err
+	if err = file.Close(); err != nil {
+		return
 	}
-	defer func() { _ = stmt.Close() }()
-	return err
+	if err = openDb(); err != nil {
+		return
+	}
+	err = createTables()
+	return
 }
 
 //
-func (t *RoomsTable) Delete(rid string) (err error) {
-	var stmt *sql.Stmt
-	stmt, err = db.Prepare(roomsDeleteSQL) // avoid SQL injections
-	if err != nil {
-		return err
-	}
-	if _, err = stmt.Exec(rid); err != nil {
-		return err
-	}
-	defer func() { _ = stmt.Close() }()
-	return err
+func openDb() (err error) {
+	db, err = sql.Open("sqlite3", DbPath())
+	return
 }
 
 //
-func (t *RoomsTable) ExecOneSQL(query string, args ...interface{}) (err error) {
-	var stmt *sql.Stmt
-	stmt, err = db.Prepare(query) // avoid SQL injections
-	if err != nil {
-		return err
-	}
-	if _, err = stmt.Exec(args...); err != nil {
-		return err
-	}
-	defer func() { _ = stmt.Close() }()
-	return err
+func closeDb() error {
+	return db.Close()
 }
 
-type User struct {
-	Uid string `json:"uid"`
-	Pwd string `json:"pwd"`
-}
+func createTables() (err error) {
+	cmd := `DROP TABLE IF EXISTS USERS;
 
-type Admin User
+CREATE TABLE USERS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    EMAIL      VARCHAR(255),
+    PASSWORD   TEXT CHECK ( MAX_ROLE > 3 OR PASSWORD IS NOT NULL ),
+    MAX_ROLE   INTEGER     NOT NULL DEFAULT 4,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))
+);
 
-type AdminsTable struct{}
+DROP TABLE IF EXISTS ROOMS;
 
-//
-func (t *AdminsTable) Query() ([]Admin, error) {
-	var admins []Admin
-	rows, err := db.Query(adminsQuerySQL)
-	if err != nil {
-		return nil, err
-	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		var admin Admin
-		if err := rows.Scan(&admin.Uid, &admin.Pwd); err != nil {
-			return nil, err
-		}
-		admins = append(admins, admin)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return admins, nil
-}
+CREATE TABLE ROOMS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
+    TOKEN      TEXT        NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
 
-//
-func (t *AdminsTable) Insert(admin Admin) (err error) {
-	var stmt *sql.Stmt
-	stmt, err = db.Prepare(adminsInsertSQL) // avoid SQL injections
-	if err != nil {
-		return err
-	}
-	if _, err = stmt.Exec(admin.Uid, admin.Pwd); err != nil {
-		return err
-	}
-	defer func() { _ = stmt.Close() }()
-	return err
-}
+DROP TABLE IF EXISTS JOIN_ROOM;
 
-//
-func (t *AdminsTable) Delete(uid string) (err error) {
-	var stmt *sql.Stmt
-	stmt, err = db.Prepare(adminsDeleteSQL) // avoid SQL injections
-	if err != nil {
-		return err
-	}
-	if _, err = stmt.Exec(uid); err != nil {
-		return err
-	}
-	defer func() { _ = stmt.Close() }()
-	return err
-}
+CREATE TABLE JOIN_ROOM
+(
+    ID        INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID      VARCHAR(63) NOT NULL UNIQUE,
+    ROOM_ID   INTEGER     NOT NULL,
+    USER_ID   INTEGER     NOT NULL,
+    JOINED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (ROOM_ID) REFERENCES ROOMS (ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
 
-//
-func (t *AdminsTable) ExecOneSQL(query string, args ...interface{}) (err error) {
-	var stmt *sql.Stmt
-	stmt, err = db.Prepare(query) // avoid SQL injections
-	if err != nil {
-		return err
-	}
-	if _, err = stmt.Exec(args...); err != nil {
-		return err
-	}
-	defer func() { _ = stmt.Close() }()
-	return err
-}
+DROP TABLE IF EXISTS SESSIONS;
 
-//
-func createRoomsTable() error {
-	if _, err := db.Exec(roomsCreateSQL); err != nil {
-		return err
-	}
-	return nil
-}
-
-//
-func createAdminsTable() error {
-	if _, err := db.Exec(adminsCreateSQL); err != nil {
-		return err
-	}
-	return nil
+CREATE TABLE SESSIONS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);`
+	_, err = db.Exec(cmd)
+	return
 }
