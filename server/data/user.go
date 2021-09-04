@@ -28,7 +28,7 @@ func UserByUUId(uuid string) (u User, err error) {
 	q := `SELECT ID, UUID, NAME, EMAIL, PASSWORD, MAX_ROLE, CREATED_AT FROM USERS WHERE UUID = $1;`
 	err = db.QueryRow(q, uuid).Scan(&u.Id, &u.UUId, &u.Name, &u.Email, &u.Password, &u.MaxRole, &u.CreatedAt)
 	if err != nil || u.Id < 1 {
-		err = errors.New("not found")
+		err = errors.New("Not found user by uuid: " + uuid)
 	}
 	return
 }

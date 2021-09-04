@@ -18,7 +18,7 @@ func RoomByUUid(uuid string) (r Room, err error) {
 	q := `SELECT ID, UUID, NAME, USER_ID, TOKEN, CREATED_AT FROM ROOMS WHERE UUID = $1`
 	err = db.QueryRow(q, uuid).Scan(&r.Id, &r.UUId, &r.Name, &r.UserId, &r.Token, &r.CreatedAt)
 	if err != nil || r.Id < 1 {
-		err = errors.New("not found")
+		err = errors.New("Not found room by uuid: "+uuid)
 	}
 	return
 }

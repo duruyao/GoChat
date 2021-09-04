@@ -16,7 +16,7 @@ func SessionByUUid(uuid string) (s Session, err error) {
 	q := `SELECT ID, UUID, USER_ID, CREATED_AT FROM SESSIONS WHERE UUID = $1`
 	err = db.QueryRow(q, uuid).Scan(&s.Id, &s.UUId, &s.UserId, &s.CreatedAt)
 	if err != nil || s.Id < 1 {
-		err = errors.New("not found")
+		err = errors.New("Not found session by uuid: " + uuid)
 	}
 	return
 }
