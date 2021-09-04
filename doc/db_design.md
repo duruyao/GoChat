@@ -2,6 +2,12 @@
 
 ## 1. USERS Table.
 
+| ID | UUID | NAME | EMAIL | PASSWORD | MAX_ROLE | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |  |  |
+| 2 |  |  |  |  |  |  |
+| 3 |  |  |  |  |  |  |
+
 ```sql
 CREATE TABLE USERS
 (
@@ -16,6 +22,12 @@ CREATE TABLE USERS
 ```
 
 ## 2. ROOMS Table.
+
+| ID | UUID | NAME | USER_ID | TOKEN | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
 
 ```sql
 CREATE TABLE ROOMS
@@ -32,6 +44,12 @@ CREATE TABLE ROOMS
 
 ## 3. SESSIONS Table.
 
+| ID | UUID | USER_ID | CREATED_AT |
+| :-: | :-: | :-: | :-: |
+| 1 |  |  |  |
+| 2 |  |  |  |
+| 3 |  |  |  |
+
 ```sql
 CREATE TABLE SESSIONS
 (
@@ -44,6 +62,12 @@ CREATE TABLE SESSIONS
 ```
 
 ## 4. JOIN_ROOM Table.
+
+| ID | UUID | ROOM_ID | USER_ID | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+| 3 |  |  |  |  |
 
 ```sql
 CREATE TABLE JOIN_ROOM
