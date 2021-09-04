@@ -17,7 +17,7 @@ func init() {
 		}
 	}
 	go goWaitCloseDb()
-	//go goAutoDeleteExpiredGuest()
+	//go goAutoDeleteExpiredGuest(10 * time.Hour)
 }
 
 func goWaitCloseDb() {
@@ -29,21 +29,26 @@ func goWaitCloseDb() {
 	}
 }
 
-func goAutoDeleteExpiredGuest() {
+func goAutoDeleteExpiredGuest(effectiveTime time.Duration) {
 	for {
 		select {
 		case <-util.Quit():
 			return
 		case <-time.After(10 * time.Minute):
-			cmd := `BEGIN; 
-DELETE FROM JOIN_ROOM WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1); 
-DELETE FROM USERS WHERE MAX_ROLE > $1 AND CREATED_AT < $2; COMMIT;`
-			stmt, err := db.Prepare(cmd)
+			q1 := `DELETE FROM JOIN_ROOM WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1);`
+			q2 := `DELETE FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1;`
+			tx, err := db.Begin()
 			if err == nil {
-				if _, err := stmt.Exec(Admin, time.Now().Local().Add(-10*time.Hour)); err != nil {
+				date := time.Now().Local().Add(-effectiveTime)
+				if _, err := tx.Exec(q1, date); err != nil {
 					mlog.ErrorLn(err)
+					continue
 				}
-				if err := stmt.Close(); err != nil {
+				if _, err := tx.Exec(q2, date); err != nil {
+					mlog.ErrorLn(err)
+					continue
+				}
+				if err := tx.Commit(); err != nil {
 					mlog.ErrorLn(err)
 				}
 			}
