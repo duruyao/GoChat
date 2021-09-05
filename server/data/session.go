@@ -9,6 +9,8 @@ type Session struct {
 	Id        int
 	UUId      string
 	UserId    int
+	UserName  string // TODO: add `USER_NAME` to SESSIONS table
+	UserEmail string // TODO: add `USER_EMAIL` to SESSIONS table
 	CreatedAt time.Time
 }
 

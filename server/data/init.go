@@ -17,7 +17,7 @@ func init() {
 		}
 	}
 	go goWaitCloseDb()
-	//go goAutoDeleteExpiredGuest(10 * time.Hour)
+	//go goAutoDeleteExpiredGuest(30 * time.Hour)
 }
 
 func goWaitCloseDb() {
@@ -36,7 +36,8 @@ func goAutoDeleteExpiredGuest(effectiveTime time.Duration) {
 			return
 		case <-time.After(10 * time.Minute):
 			q1 := `DELETE FROM JOIN_ROOM WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1);`
-			q2 := `DELETE FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1;`
+			q2 := `DELETE FROM SESSIONS WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1);`
+			q3 := `DELETE FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1;`
 			tx, err := db.Begin()
 			if err == nil {
 				date := time.Now().Local().Add(-effectiveTime)
@@ -45,6 +46,10 @@ func goAutoDeleteExpiredGuest(effectiveTime time.Duration) {
 					continue
 				}
 				if _, err := tx.Exec(q2, date); err != nil {
+					mlog.ErrorLn(err)
+					continue
+				}
+				if _, err := tx.Exec(q3, date); err != nil {
 					mlog.ErrorLn(err)
 					continue
 				}

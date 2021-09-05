@@ -82,7 +82,8 @@ func (u *User) Update() (err error) {
 func (u *User) Delete() (err error) {
 	q1 := `DELETE FROM JOIN_ROOM WHERE USER_ID = $1;`
 	q2 := `DELETE FROM ROOMS WHERE USER_ID = $1;`
-	q3 := `DELETE FROM USERS WHERE ID = $1;`
+	q3 := `DELETE FROM SESSIONS WHERE USER_ID = $1;`
+	q4 := `DELETE FROM USERS WHERE ID = $1;`
 	tx, err := db.Begin()
 	if err != nil {
 		return
@@ -97,6 +98,10 @@ func (u *User) Delete() (err error) {
 		return
 	}
 	_, err = tx.Exec(q3, u.Id)
+	if err != nil {
+		return
+	}
+	_, err = tx.Exec(q4, u.Id)
 	return
 }
 
