@@ -10,5 +10,9 @@ func init() {
 		if err := writeFile(&cfg); err != nil {
 			mlog.FatalLn(err)
 		}
+	} else {
+		if err := readFile(&cfg); err != nil {
+			mlog.FatalLn(err)
+		}
 	}
 }

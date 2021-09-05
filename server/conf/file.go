@@ -8,13 +8,14 @@ import (
 	"path/filepath"
 )
 
-// Path returns '$HOME/.GoChat/conf/gochat.conf'.
-func Path() string { return fmt.Sprintf("%s/.GoChat/conf/gochat.conf", util.UserHomeDir()) }
+func Path() string {
+	return fmt.Sprintf("%s/app/gochat.conf", util.GoChatDir())
+}
 
-// Dir returns '$HOME/.GoChat/conf'.
-func Dir() string { return filepath.Dir(Path()) }
+func Dir() string {
+	return filepath.Dir(Path())
+}
 
-// IsNotExist returns true if the file '$HOME/.GoChat/conf/gochat.conf' doesn't exists, otherwise false.
 func IsNotExist() bool {
 	if _, err := os.Stat(Path()); os.IsNotExist(err) {
 		return true
@@ -22,7 +23,6 @@ func IsNotExist() bool {
 	return false
 }
 
-// createFile creates a new path '$HOME/.GoChat/conf/gochat.conf'.
 func createFile() (err error) {
 	var file *os.File
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
@@ -38,7 +38,6 @@ func createFile() (err error) {
 	return err
 }
 
-// readFile reads a type Config from the file '$HOME/.GoChat/conf/gochat.conf' to conf.
 func readFile(c *config) error {
 	data, err := ioutil.ReadFile(Path())
 	if err != nil {
@@ -47,7 +46,6 @@ func readFile(c *config) error {
 	return c.Parse(data)
 }
 
-// writeFile writes a type Config from conf to the new file '$HOME/.GoChat/conf/gochat.conf'.
 func writeFile(c *config) error {
 	return ioutil.WriteFile(Path(), []byte(c.String()), 0666)
 }

@@ -18,12 +18,12 @@ func Tomorrow() time.Time {
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 }
 
-var projectDirOnce sync.Once
-var projectDir string
+var gochatDirOnce sync.Once
+var gochatDir string
 
-// ProjectDir returns the directory of the current project, such as "/home/user/project/gochat*".
-func ProjectDir() string {
-	projectDirOnce.Do(func() {
+// GoChatDir returns the directory of the current project, such as "/home/user/project/gochat*".
+func GoChatDir() string {
+	gochatDirOnce.Do(func() {
 		dir, err := os.Getwd()
 		if err != nil {
 			log.Fatalln(err)
@@ -31,7 +31,7 @@ func ProjectDir() string {
 		for {
 			base := filepath.Base(dir)
 			if strings.HasPrefix(base, "gochat") || strings.HasPrefix(base, "GoChat") {
-				projectDir = dir
+				gochatDir = dir
 				return
 			}
 			if filepath.Dir(dir) == dir {
@@ -41,13 +41,13 @@ func ProjectDir() string {
 		}
 		log.Fatalln("not found project directory")
 	})
-	return projectDir
+	return gochatDir
 }
 
 var userHomeDirOnce sync.Once
 var userHomeDir string
 
-// ProjectDir returns the home directory of the current user, such as "/home/user" in Unix-like OS.
+// GoChatDir returns the home directory of the current user, such as "/home/user" in Unix-like OS.
 func UserHomeDir() string {
 	userHomeDirOnce.Do(func() {
 		var err error
