@@ -1,73 +1,37 @@
 package data
 
 import (
-	"errors"
+	"fmt"
 	"time"
 )
 
 type Session struct {
-	Id        int
-	UUId      string
-	UserId    int
-	UserName  string // TODO: add `USER_NAME` to SESSIONS table
-	UserEmail string // TODO: add `USER_EMAIL` to SESSIONS table
-	CreatedAt time.Time
+	Id        int       `db:"ID"`
+	UUId      string    `db:"UUID"`
+	UserId    int       `db:"USER_ID"`
+	CreatedAt time.Time `db:"CREATED_AT"`
 }
 
-func SessionByUUid(uuid string) (s Session, err error) {
-	q := `SELECT ID, UUID, USER_ID, CREATED_AT FROM SESSIONS WHERE UUID = $1`
-	err = db.QueryRow(q, uuid).Scan(&s.Id, &s.UUId, &s.UserId, &s.CreatedAt)
-	if err != nil || s.Id < 1 {
-		err = errors.New("Not found session by uuid: " + uuid)
-	}
+func SessionByUniqueKey(key string, value interface{}) (s Session, err error) {
+	q := fmt.Sprintf("SELECT * FROM SESSIONS WHERE %s = $2;", key)
+	err = db.Get(&s, q, value)
 	return
 }
 
-func AllSessions() (ss []Session, err error) {
-	q := `SELECT ID, UUID, USER_ID, CREATED_AT FROM SESSIONS;`
-	rows, err := db.Query(q)
-	if nil == rows || err != nil {
-		return
-	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		s := Session{}
-		if err = rows.Scan(&s.Id, &s.UUId, &s.UserId, &s.CreatedAt); err != nil {
-			return
-		}
-		ss = append(ss, s)
-	}
+func Sessions(limit int) (ss []Session, err error) {
+	q := `SELECT * FROM SESSIONS LIMIT $1;`
+	err = db.Select(&ss, q, limit)
 	return
 }
-
-//
-//func (s *Session) CheckUUId() (valid bool, err error) {
-//	q := `SELECT ID, UUID, USER_ID, CREATED_AT FROM SESSIONS WHERE UUID = $1;`
-//	err = db.QueryRow(q, s.UUId).Scan(&s.Id, &s.UUId, &s.UserId, &s.CreatedAt)
-//	if err != nil {
-//		return
-//	}
-//	valid = s.Id > 0
-//	return
-//}
 
 func (s *Session) Delete() (err error) {
 	q := `DELETE FROM SESSIONS WHERE ID = $1;`
-	stmt, err := db.Prepare(q)
-	if err != nil {
-		return
-	}
-	defer func() { _ = stmt.Close() }()
-	_, err = stmt.Exec(s.Id)
+	_, err = db.Exec(q, s.Id)
 	return
 }
 
 func (s *Session) User() (u User, err error) {
-	q := `SELECT ID, UUID, NAME, EMAIL, PASSWORD, MAX_ROLE, CREATED_AT FROM USERS WHERE ID = $1;`
-	err = db.QueryRow(q, s.UserId).Scan(&u.Id, &u.UUId, &u.Name, &u.Email, &u.Password, &u.MaxRole, &u.CreatedAt)
+	q := `SELECT * FROM USERS WHERE ID = $1;`
+	err = db.Get(&u, q, s.UserId)
 	return
-}
-
-func (s *Session) CreatedTime() string {
-	return s.CreatedAt.Format("2006-01-02 03:04:05")
 }

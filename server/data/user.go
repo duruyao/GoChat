@@ -1,7 +1,7 @@
 package data
 
 import (
-	"errors"
+	"fmt"
 	"github.com/duruyao/gochat/server/util"
 	"time"
 )
@@ -15,90 +15,66 @@ const (
 )
 
 type User struct {
-	Id        int
-	UUId      string
-	Name      string
-	Email     string
-	Password  string
-	MaxRole   Role
-	CreatedAt time.Time
+	Id        int       `db:"ID"`
+	UUId      string    `db:"UUID"`
+	Name      string    `db:"NAME"`
+	Password  string    `db:"PASSWORD"`
+	MaxRole   Role      `db:"MAX_ROLE"`
+	CreatedAt time.Time `db:"CREATED_AT"`
 }
 
-func UserByUUId(uuid string) (u User, err error) {
-	q := `SELECT ID, UUID, NAME, EMAIL, PASSWORD, MAX_ROLE, CREATED_AT FROM USERS WHERE UUID = $1;`
-	err = db.QueryRow(q, uuid).Scan(&u.Id, &u.UUId, &u.Name, &u.Email, &u.Password, &u.MaxRole, &u.CreatedAt)
-	if err != nil || u.Id < 1 {
-		err = errors.New("Not found user by uuid: " + uuid)
-	}
+func UserByUniqueKey(key string, value interface{}) (u User, err error) {
+	q := fmt.Sprintf("SELECT * FROM USERS WHERE %s = $2;", key)
+	err = db.Get(&u, q, value)
 	return
 }
 
-func AllUsers() (us []User, err error) {
-	q := `SELECT ID, UUID, NAME, EMAIL, PASSWORD, MAX_ROLE, CREATED_AT FROM USERS;`
-	rows, err := db.Query(q)
-	if nil == rows || err != nil {
-		return
-	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		u := User{}
-		if err = rows.Scan(&u.Id, &u.UUId, &u.Name, &u.Email, &u.Password, &u.MaxRole, &u.CreatedAt); err != nil {
-			return
-		}
-		us = append(us, u)
-	}
+func Users(limit int) (us []User, err error) {
+	q := `SELECT * FROM USERS LIMIT $1;`
+	err = db.Select(&us, q, limit)
 	return
 }
 
 func (u *User) Create() (err error) {
-	q1 := `INSERT INTO USERS (UUID, NAME, EMAIL, PASSWORD, MAX_ROLE, CREATED_AT) VALUES ($1, $2, $3, $4, $5, $6);`
+	q1 := `INSERT INTO USERS (UUID, NAME, PASSWORD, MAX_ROLE, CREATED_AT) VALUES ($1, $2, $3, $4, $5);`
 	q2 := `SELECT LAST_INSERT_ROWID();`
-	tx, err := db.Begin()
+	tx, err := db.Beginx()
 	if err != nil {
 		return
 	}
 	defer func() { _ = tx.Commit() }()
 	u.UUId = util.CreateUUId()
 	u.CreatedAt = time.Now().Local()
-	_, err = tx.Exec(q1, u.UUId, u.Name, u.Email, util.Encrypt(u.Password), u.MaxRole, u.CreatedAt)
-	if err != nil {
+	if _, err = tx.Exec(q1, u.UUId, u.Name, util.Encrypt(u.Password), u.MaxRole, u.CreatedAt); err != nil {
 		return
 	}
-	err = tx.QueryRow(q2).Scan(&u.Id)
+	err = tx.Get(&u.Id, q2)
 	return
 }
 
 func (u *User) Update() (err error) {
-	q := `UPDATE USERS SET NAME = $1, EMAIL = $2, PASSWORD = $3, MAX_ROLE = $4 WHERE ID = $5;`
-	stmt, err := db.Prepare(q)
-	if err != nil {
-		return
-	}
-	defer func() { _ = stmt.Close() }()
-	_, err = stmt.Exec(u.Name, u.Email, u.Password, u.MaxRole, u.Id)
+	q := `UPDATE USERS SET NAME = $1, PASSWORD = $3, MAX_ROLE = $4 WHERE ID = $5;`
+	_, err = db.Exec(q, u.Name, u.Password, u.MaxRole, u.Id)
 	return
 }
 
 func (u *User) Delete() (err error) {
-	q1 := `DELETE FROM JOIN_ROOM WHERE USER_ID = $1;`
-	q2 := `DELETE FROM ROOMS WHERE USER_ID = $1;`
+	q1 := `DELETE FROM MEMBERS WHERE USER_ID = $1;`
+	q2 := `DELETE FROM GROUPS WHERE ADMIN_ID = $1;`
 	q3 := `DELETE FROM SESSIONS WHERE USER_ID = $1;`
 	q4 := `DELETE FROM USERS WHERE ID = $1;`
-	tx, err := db.Begin()
+	tx, err := db.Beginx()
 	if err != nil {
 		return
 	}
 	defer func() { _ = tx.Commit() }()
-	_, err = tx.Exec(q1, u.Id)
-	if err != nil {
+	if _, err = tx.Exec(q1, u.Id); err != nil {
 		return
 	}
-	_, err = tx.Exec(q2, u.Id)
-	if err != nil {
+	if _, err = tx.Exec(q2, u.Id); err != nil {
 		return
 	}
-	_, err = tx.Exec(q3, u.Id)
-	if err != nil {
+	if _, err = tx.Exec(q3, u.Id); err != nil {
 		return
 	}
 	_, err = tx.Exec(q4, u.Id)
@@ -108,7 +84,7 @@ func (u *User) Delete() (err error) {
 func (u *User) CreateSession() (s Session, err error) {
 	q1 := `INSERT INTO SESSIONS (UUID, USER_ID, CREATED_AT) VALUES ($1, $2, $3);`
 	q2 := `SELECT LAST_INSERT_ROWID();`
-	tx, err := db.Begin()
+	tx, err := db.Beginx()
 	if err != nil {
 		return
 	}
@@ -118,94 +94,65 @@ func (u *User) CreateSession() (s Session, err error) {
 		UserId:    u.Id,
 		CreatedAt: time.Now().Local(),
 	}
-	_, err = tx.Exec(q1, s.UUId, s.UserId, s.CreatedAt)
-	if err != nil {
+	if _, err = tx.Exec(q1, s.UUId, s.UserId, s.CreatedAt); err != nil {
 		return
 	}
-	err = tx.QueryRow(q2).Scan(&s.Id)
+	err = tx.Get(&s.Id, q2)
 	return
 }
 
 func (u *User) Session() (s Session, err error) {
-	q := `SELECT ID, UUID, USER_ID, CREATED_AT FROM SESSIONS WHERE USER_ID = $1;`
-	err = db.QueryRow(q, u.Id).Scan(&s.Id, &s.UUId, &s.UserId, &s.CreatedAt)
+	q := `SELECT * FROM SESSIONS WHERE USER_ID = $1;`
+	err = db.Get(&s, q, u.Id)
 	return
 }
 
-func (u *User) CreateRoom(name string, token string) (r Room, err error) {
-	q1 := `INSERT INTO ROOMS (UUID, NAME, USER_ID, TOKEN) VALUES ($1, $2, $3, $4);`
+func (u *User) CreateGroup(name string, token string) (g Group, err error) {
+	q1 := `INSERT INTO GROUPS (UUID, NAME, ADMIN_ID, TOKEN) VALUES ($1, $2, $3, $4);`
 	q2 := `SELECT LAST_INSERT_ROWID();`
-	tx, err := db.Begin()
+	q3 := `INSERT INTO MEMBERS (UUID, GROUP_ID, USER_ID) VALUES ($1, $2, $3);`
+	tx, err := db.Beginx()
 	if err != nil {
 		return
 	}
 	defer func() { _ = tx.Commit() }()
-	r = Room{
+	g = Group{
 		UUId:      util.CreateUUId(),
 		Name:      name,
-		UserId:    u.Id,
+		AdminId:   u.Id,
 		Token:     token,
 		CreatedAt: time.Now().Local(),
 	}
-	_, err = tx.Exec(q1, r.UUId, r.Name, r.UserId, r.Token)
-	if err != nil {
+	if _, err = tx.Exec(q1, g.UUId, g.Name, g.AdminId, g.Token); err != nil {
 		return
 	}
-	err = tx.QueryRow(q2).Scan(&r.Id)
-	return
-}
-
-func (u *User) CreatedRooms() (rs []Room, err error) {
-	q := `SELECT ID, UUID, NAME, USER_ID, TOKEN, CREATED_AT FROM ROOMS WHERE USER_ID = $1;`
-	rows, err := db.Query(q, u.Id)
-	if nil == rows || err != nil {
+	if err = tx.Get(&g.Id, q2); err != nil {
 		return
 	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		r := Room{}
-		if err = rows.Scan(&r.Id, &r.UUId, &r.Name, &r.UserId, &r.Token, &r.CreatedAt); err != nil {
-			return
-		}
-		rs = append(rs, r)
-	}
+	_, err = tx.Exec(q3, util.CreateUUId(), g.Id, u.Id)
 	return
 }
 
-func (u *User) JoinRoom(r Room) (err error) {
-	q := `INSERT INTO JOIN_ROOM (UUID, ROOM_ID, USER_ID) VALUES ($1, $2, $3);`
-	_, err = db.Exec(q, util.CreateUUId(), r.Id, u.Id)
+func (u *User) CreatedGroups() (gs []Group, err error) {
+	q := `SELECT * FROM GROUPS WHERE ADMIN_ID = $1;`
+	err = db.Select(&gs, q, u.Id)
 	return
 }
 
-func (u *User) JoinedRooms() (rs []Room, err error) {
-	q := `SELECT R.ID, R.UUID, NAME, TOKEN, CREATED_AT FROM ROOMS R, JOIN_ROOM J WHERE R.ID = J.ROOM_ID AND J.USER_ID = $1;`
-	rows, err := db.Query(q, u.Id)
-	if nil == rows || err != nil {
-		return
-	}
-	defer func() { _ = rows.Close() }()
-	for rows.Next() {
-		var r Room
-		if err = rows.Scan(&r.Id, &r.UUId, &r.Name, &r.Token, &r.CreatedAt); err != nil {
-			return
-		}
-		rs = append(rs, r)
-	}
+func (u *User) JoinGroup(g Group) (err error) {
+	q := `INSERT INTO MEMBERS (UUID, GROUP_ID, USER_ID) VALUES ($1, $2, $3);`
+	_, err = db.Exec(q, util.CreateUUId(), g.Id, u.Id)
 	return
 }
 
-func (u *User) LeaveRoom(r Room) (err error) {
-	q := `DELETE FROM JOIN_ROOM WHERE ROOM_ID = $1;`
-	stmt, err := db.Prepare(q)
-	if err != nil {
-		return
-	}
-	defer func() { _ = stmt.Close() }()
-	_, err = stmt.Exec(r.Id)
+func (u *User) JoinedGroups() (gs []Group, err error) {
+	q := `SELECT G.* FROM GROUPS G, MEMBERS M WHERE G.ID = M.GROUP_ID AND M.USER_ID = $1;`
+	err = db.Select(&gs, q, u.Id)
 	return
 }
 
-func (u *User) CreatedTime() string {
-	return u.CreatedAt.Format("2006-01-02 03:04:05")
+func (u *User) LeaveGroup(g Group) (err error) {
+	q := `DELETE FROM MEMBERS WHERE GROUP_ID = $1;`
+	_, err = db.Exec(q, g.Id)
+	return
 }

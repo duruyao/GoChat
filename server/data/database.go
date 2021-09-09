@@ -1,15 +1,15 @@
 package data
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/duruyao/gochat/server/util"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"path/filepath"
 )
 
-var db *sql.DB
+var db *sqlx.DB
 
 // DbPath returns '$HOME/.GoChat/data/gochat.sqlite'.
 func DbPath() string {
@@ -53,7 +53,7 @@ func createDb() (err error) {
 
 //
 func openDb() (err error) {
-	db, err = sql.Open("sqlite3", DbPath())
+	db, err = sqlx.Open("sqlite3", DbPath())
 	return
 }
 
@@ -70,15 +70,15 @@ CREATE TABLE USERS
     ID         INTEGER PRIMARY KEY AUTOINCREMENT,
     UUID       VARCHAR(63) NOT NULL UNIQUE,
     NAME       VARCHAR(63) NOT NULL UNIQUE,
-    EMAIL      VARCHAR(255),
+    EMAIL      VARCHAR(255) CHECK ( MAX_ROLE > 3 OR PASSWORD IS NOT NULL ),
     PASSWORD   TEXT CHECK ( MAX_ROLE > 3 OR PASSWORD IS NOT NULL ),
     MAX_ROLE   INTEGER     NOT NULL DEFAULT 4,
     CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))
 );
 
-DROP TABLE IF EXISTS ROOMS;
+DROP TABLE IF EXISTS GROUPS;
 
-CREATE TABLE ROOMS
+CREATE TABLE GROUPS
 (
     ID         INTEGER PRIMARY KEY AUTOINCREMENT,
     UUID       VARCHAR(63) NOT NULL UNIQUE,
@@ -89,16 +89,16 @@ CREATE TABLE ROOMS
     FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
 );
 
-DROP TABLE IF EXISTS JOIN_ROOM;
+DROP TABLE IF EXISTS MEMBERS;
 
-CREATE TABLE JOIN_ROOM
+CREATE TABLE MEMBERS
 (
     ID        INTEGER PRIMARY KEY AUTOINCREMENT,
     UUID      VARCHAR(63) NOT NULL UNIQUE,
-    ROOM_ID   INTEGER     NOT NULL,
+    GROUP_ID   INTEGER     NOT NULL,
     USER_ID   INTEGER     NOT NULL,
     JOINED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
-    FOREIGN KEY (ROOM_ID) REFERENCES ROOMS (ID),
+    FOREIGN KEY (GROUP_ID) REFERENCES GROUPS (ID),
     FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
 );
 

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"math"
 	"testing"
 )
 
@@ -71,7 +72,7 @@ func TestUser_Create(t *testing.T) {
 	}
 	t.Log(u7)
 
-	us, err := AllUsers()
+	us, err := Users(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,8 +81,8 @@ func TestUser_Create(t *testing.T) {
 	}
 }
 
-func TestAllUsers(t *testing.T) {
-	us, err := AllUsers()
+func TestUsers(t *testing.T) {
+	us, err := Users(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,12 +91,12 @@ func TestAllUsers(t *testing.T) {
 	}
 }
 
-func TestUserByUUId(t *testing.T) {
-	us, err := AllUsers()
+func TestUserByUniqueKey(t *testing.T) {
+	us, err := Users(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	u, err := UserByUUId(us[1].UUId) // admin1
+	u, err := UserByUniqueKey("UUID", us[1].UUId) // admin1
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -118,8 +119,8 @@ func TestUser_CreateSession(t *testing.T) {
 	t.Log(s2)
 }
 
-func TestAllSessions(t *testing.T) {
-	ss, err := AllSessions()
+func TestSessions(t *testing.T) {
+	ss, err := Sessions(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -128,7 +129,7 @@ func TestAllSessions(t *testing.T) {
 	}
 }
 
-func TestSessionByUUid(t *testing.T) {
+func TestSessionByUniqueKey(t *testing.T) {
 	u := User{Id: 2} // admin1
 
 	s1, err := u.Session() // session of admin1
@@ -137,125 +138,125 @@ func TestSessionByUUid(t *testing.T) {
 	}
 	t.Log(s1)
 
-	s2, err := SessionByUUid(s1.UUId)
+	s2, err := SessionByUniqueKey("UUID", s1.UUId)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Log(s2)
 }
 
-func TestUser_CreateRoom(t *testing.T) {
+func TestUser_CreateGroup(t *testing.T) {
 	u := User{Id: 2} // admin1
 
-	r1, err := u.CreateRoom("Chat_Room_1", "210993")
+	g1, err := u.CreateGroup("Chat_Room_1", "210993")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r1)
+	t.Log(g1)
 
-	r2, err := u.CreateRoom("Chat_Room_2", "5671295")
+	g2, err := u.CreateGroup("Chat_Room_2", "5671295")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r2)
+	t.Log(g2)
 
-	rs, err := u.CreatedRooms()
+	gs, err := u.CreatedGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 
-	rs, err = AllRooms()
+	gs, err = Groups(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 }
 
-func TestAllRooms(t *testing.T) {
-	rs, err := AllRooms()
+func TestGroups(t *testing.T) {
+	gs, err := Groups(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 }
 
-func TestRoomByUUid(t *testing.T) {
+func TestGroupByUniqueKey(t *testing.T) {
 	u := User{Id: 2} // admin1
 
-	rs, err := u.CreatedRooms()
+	gs, err := u.CreatedGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(rs[0])
+	t.Log(gs[0])
 
-	r, err := RoomByUUid(rs[0].UUId) // Chat_room_1
+	g, err := GroupByUniqueKey("UUID", gs[0].UUId) // Chat_room_1
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(r)
+	t.Log(g)
 }
 
-func TestUser_JoinRoom(t *testing.T) {
-	r1 := Room{Id: 1} // Chat_room_1
+func TestUser_JoinGroup(t *testing.T) {
+	g1 := Group{Id: 1} // Chat_room_1
 
-	r2 := Room{Id: 2} // Chat_Room_2
+	g2 := Group{Id: 2} // Chat_Room_2
 
 	u := User{Id: 7} // guest4
 
-	if err := u.JoinRoom(r1); err != nil {
+	if err := u.JoinGroup(g1); err != nil {
 		t.Fatal(err)
 	}
-	if err := u.JoinRoom(r2); err != nil {
+	if err := u.JoinGroup(g2); err != nil {
 		t.Fatal(err)
 	}
 
-	rs, err := u.JoinedRooms()
+	gs, err := u.JoinedGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 
-	rs, err = AllRooms()
+	gs, err = Groups(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 }
 
-func TestUser_LeaveRoom(t *testing.T) {
-	r1 := Room{Id: 1} // Chat_Room_1
+func TestUser_LeaveGroup(t *testing.T) {
+	g1 := Group{Id: 1} // Chat_Room_1
 
 	u := User{Id: 7} // guest4
 
-	if err := u.LeaveRoom(r1); err != nil {
+	if err := u.LeaveGroup(g1); err != nil {
 		t.Fatal(err)
 	}
 
-	rs, err := u.JoinedRooms()
+	gs, err := u.JoinedGroups()
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 
-	rs, err = AllRooms()
+	gs, err = Groups(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 }
 
@@ -265,11 +266,11 @@ func TestUser_Delete(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	rs, err := AllRooms()
+	gs, err := Groups(math.MaxInt32)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range rs {
-		t.Log(r)
+	for _, g := range gs {
+		t.Log(g)
 	}
 }
