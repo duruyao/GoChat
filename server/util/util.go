@@ -2,9 +2,15 @@ package util
 
 import (
 	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha512"
+	"crypto/x509"
+	"crypto/x509/pkix"
+	"encoding/pem"
 	"fmt"
 	"log"
+	"math/big"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -99,7 +105,43 @@ func Encrypt(plaintext string) string {
 	return fmt.Sprintf("%x", sha512.Sum512([]byte(plaintext)))
 }
 
-func WithoutExt(filename string) string {
+func RmExtName(filename string) string {
 	name := filepath.Base(filename)
 	return name[:len(name)-len(filepath.Ext(name))]
+}
+
+func CreateTLSCertAndKey(certFile string, keyFile string) (err error) {
+	max := new(big.Int).Lsh(big.NewInt(1), 128)
+	serialNumber, _ := rand.Int(rand.Reader, max)
+	subject := pkix.Name{
+		Organization:       []string{""},
+		OrganizationalUnit: []string{""},
+		CommonName:         "GoChat",
+	}
+
+	template := x509.Certificate{
+		SerialNumber: serialNumber,
+		Subject:      subject,
+		NotBefore:    time.Now(),
+		NotAfter:     time.Now().Add(365 * 24 * time.Hour),
+		KeyUsage:     x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+		IPAddresses:  []net.IP{net.ParseIP("127.0.0.1")},
+	}
+
+	pk, _ := rsa.GenerateKey(rand.Reader, 2048)
+
+	derBytes, _ := x509.CreateCertificate(rand.Reader, &template, &template, &pk.PublicKey, pk)
+	certOut, _ := os.Create(certFile)
+	if err = pem.Encode(certOut, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes}); err != nil {
+		return
+	}
+	defer func() { _ = certOut.Close() }()
+
+	keyOut, _ := os.Create(keyFile)
+	if err = pem.Encode(keyOut, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(pk)}); err != nil {
+		return
+	}
+	defer func() { _ = keyOut.Close() }()
+	return
 }
