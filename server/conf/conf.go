@@ -6,13 +6,13 @@ import (
 )
 
 type config struct {
-	rwMu             sync.RWMutex
-	Addr             string `json:"addr,omitempty"`
-	MaxUsers         int    `json:"max_users,omitempty"`
-	MaxRooms         int    `json:"max_rooms,omitempty"`
-	MaxUsersPerRoom  int    `json:"max_users_per_room,omitempty"`
-	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
-	HttpsEnable      bool   `json:"https_enable"`
+	rwMu              sync.RWMutex
+	Addr              string `json:"addr,omitempty"`
+	MaxUsers          int    `json:"max_users,omitempty"`
+	MaxGroups         int    `json:"max_groups,omitempty"`
+	MaxUsersPerGroup  int    `json:"max_users_per_group,omitempty"`
+	MaxGroupsPerAdmin int    `json:"max_groups_per_admin,omitempty"`
+	HttpsEnable       bool   `json:"https_enable"`
 }
 
 // String returns JSON format string.
@@ -48,11 +48,11 @@ func (c *config) Parse(js []byte) error {
 }
 
 var cfg = config{
-	Addr:             "localhost:8080",
-	MaxUsers:         20000,
-	MaxRooms:         200,
-	MaxUsersPerRoom:  100,
-	MaxRoomsPerAdmin: 10,
+	Addr:              "localhost:8080",
+	MaxUsers:          20000,
+	MaxGroups:         200,
+	MaxUsersPerGroup:  100,
+	MaxGroupsPerAdmin: 10,
 }
 
 //
@@ -70,24 +70,24 @@ func MaxUsers() int {
 }
 
 //
-func MaxRooms() int {
+func MaxGroups() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
-	return cfg.MaxRooms
+	return cfg.MaxGroups
 }
 
 //
-func MaxUsersPreRoom() int {
+func MaxUsersPreGroup() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
-	return cfg.MaxUsersPerRoom
+	return cfg.MaxUsersPerGroup
 }
 
 //
-func MaxRoomsPerAdmin() int {
+func MaxGroupsPerAdmin() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
-	return cfg.MaxRoomsPerAdmin
+	return cfg.MaxGroupsPerAdmin
 }
 
 //
@@ -114,26 +114,26 @@ func SetMaxUsers(maxUsers int) error {
 }
 
 //
-func SetMaxRooms(maxRooms int) error {
+func SetMaxGroups(MaxGroups int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
-	cfg.MaxRooms = maxRooms
+	cfg.MaxGroups = MaxGroups
 	return writeFile(&cfg)
 }
 
 //
-func SetMaxUsersPreRoom(maxUsersPreRoom int) error {
+func SetMaxUsersPreGroup(maxUsersPreGroup int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
-	cfg.MaxUsersPerRoom = maxUsersPreRoom
+	cfg.MaxUsersPerGroup = maxUsersPreGroup
 	return writeFile(&cfg)
 }
 
 //
-func SetMaxRoomsPerAdmin(maxRoomsPerAdmin int) error {
+func SetMaxGroupsPerAdmin(MaxGroupsPerAdmin int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
-	cfg.MaxRoomsPerAdmin = maxRoomsPerAdmin
+	cfg.MaxGroupsPerAdmin = MaxGroupsPerAdmin
 	return writeFile(&cfg)
 }
 
