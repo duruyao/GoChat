@@ -53,6 +53,7 @@ var cfg = config{
 	MaxGroups:         200,
 	MaxUsersPerGroup:  100,
 	MaxGroupsPerAdmin: 10,
+	HttpsEnable:       false,
 }
 
 //
