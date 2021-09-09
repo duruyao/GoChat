@@ -22,9 +22,9 @@ func ResourceDir() string {
 }
 
 func TLSCertPath() string {
-	return fmt.Sprintf("%s/.GoChat/.tls-cert.pem", util.UserHomeDir())
+	return fmt.Sprintf("%s/app/.tls-cert.pem", util.GoChatDir())
 }
 
 func TLSKeyPath() string {
-	return fmt.Sprintf("%s/.GoChat/.tls-key.pem", util.UserHomeDir())
+	return fmt.Sprintf("%s/app/.tls-key.pem", util.GoChatDir())
 }
