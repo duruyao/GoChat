@@ -12,6 +12,7 @@ type config struct {
 	MaxRooms         int    `json:"max_rooms,omitempty"`
 	MaxUsersPerRoom  int    `json:"max_users_per_room,omitempty"`
 	MaxRoomsPerAdmin int    `json:"max_rooms_per_admin,omitempty"`
+	HttpsEnable      bool   `json:"https_enable"`
 }
 
 // String returns JSON format string.
@@ -90,6 +91,13 @@ func MaxRoomsPerAdmin() int {
 }
 
 //
+func HttpsEnable() bool {
+	cfg.rwMu.RLock()
+	defer cfg.rwMu.RUnlock()
+	return cfg.HttpsEnable
+}
+
+//
 func SetAddr(addr string) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -126,5 +134,13 @@ func SetMaxRoomsPerAdmin(maxRoomsPerAdmin int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
 	cfg.MaxRoomsPerAdmin = maxRoomsPerAdmin
+	return writeFile(&cfg)
+}
+
+//
+func SetHttpsEnable(httpsEnable bool) error {
+	cfg.rwMu.Lock()
+	defer cfg.rwMu.Unlock()
+	cfg.HttpsEnable = httpsEnable
 	return writeFile(&cfg)
 }
