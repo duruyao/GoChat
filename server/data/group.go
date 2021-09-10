@@ -6,12 +6,12 @@ import (
 )
 
 type Group struct {
-	Id        int       `db:"ID"`
-	UUId      string    `db:"UUID"`
-	Name      string    `db:"NAME"`
-	AdminId   int       `db:"ADMIN_ID"`
-	Token     string    `db:"TOKEN"`
-	CreatedAt time.Time `db:"CREATED_AT"`
+	Id        int       `db:"ID" json:"id" form:"id" uri:"id"`
+	UUId      string    `db:"UUID" json:"uuid" form:"uuid"`
+	Name      string    `db:"NAME" json:"name" form:"name"`
+	AdminId   int       `db:"ADMIN_ID" json:"admin_id"`
+	Token     string    `db:"TOKEN" json:"token"`
+	CreatedAt time.Time `db:"CREATED_AT" json:"created_at"`
 }
 
 func GroupByUniqueKey(key string, value interface{}) (g Group, err error) {

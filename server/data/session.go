@@ -6,10 +6,10 @@ import (
 )
 
 type Session struct {
-	Id        int       `db:"ID"`
-	UUId      string    `db:"UUID"`
-	UserId    int       `db:"USER_ID"`
-	CreatedAt time.Time `db:"CREATED_AT"`
+	Id        int       `db:"ID" json:"id" form:"id" uri:"id"`
+	UUId      string    `db:"UUID" json:"uuid" form:"uuid"`
+	UserId    int       `db:"USER_ID" json:"user_id" form:"user_id"`
+	CreatedAt time.Time `db:"CREATED_AT" json:"created_at"`
 }
 
 func SessionByUniqueKey(key string, value interface{}) (s Session, err error) {

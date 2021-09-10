@@ -16,9 +16,9 @@ const (
 )
 
 type User struct {
-	Id        int       `db:"ID" json:"id"`
-	UUId      string    `db:"UUID" json:"uuid"`
-	Name      string    `db:"NAME" json:"name"`
+	Id        int       `db:"ID" json:"id" form:"id" uri:"id"`
+	UUId      string    `db:"UUID" json:"uuid" form:"uuid"`
+	Name      string    `db:"NAME" json:"name" form:"name"`
 	Password  string    `db:"PASSWORD" json:"password"`
 	MaxRole   Role      `db:"MAX_ROLE" json:"max_role"`
 	CreatedAt time.Time `db:"CREATED_AT" json:"created_at"`
