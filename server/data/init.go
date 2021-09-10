@@ -35,9 +35,9 @@ func goAutoDeleteExpiredGuest(effectiveTime time.Duration) {
 		case <-util.Quit():
 			return
 		case <-time.After(10 * time.Minute):
-			q1 := `DELETE FROM MEMBERS WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1);`
-			q2 := `DELETE FROM SESSIONS WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1);`
-			q3 := `DELETE FROM USERS WHERE MAX_ROLE > 3 AND CREATED_AT < $1;`
+			q1 := `DELETE FROM MEMBERS WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE < 1 AND CREATED_AT < $1);`
+			q2 := `DELETE FROM SESSIONS WHERE USER_ID IN (SELECT ID FROM USERS WHERE MAX_ROLE < 1 AND CREATED_AT < $1);`
+			q3 := `DELETE FROM USERS WHERE MAX_ROLE < 1 AND CREATED_AT < $1;`
 			tx, err := db.Begin()
 			if err == nil {
 				date := time.Now().Local().Add(-effectiveTime)

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"fmt"
 	"github.com/duruyao/gochat/server/util"
 	"time"
@@ -9,18 +10,18 @@ import (
 type Role int
 
 const (
-	Owner Role = 0
+	Owner Role = 4
 	Admin Role = 2
-	Guest Role = 4
+	Guest Role = 0
 )
 
 type User struct {
-	Id        int       `db:"ID"`
-	UUId      string    `db:"UUID"`
-	Name      string    `db:"NAME"`
-	Password  string    `db:"PASSWORD"`
-	MaxRole   Role      `db:"MAX_ROLE"`
-	CreatedAt time.Time `db:"CREATED_AT"`
+	Id        int       `db:"ID" json:"id"`
+	UUId      string    `db:"UUID" json:"uuid"`
+	Name      string    `db:"NAME" json:"name"`
+	Password  string    `db:"PASSWORD" json:"password"`
+	MaxRole   Role      `db:"MAX_ROLE" json:"max_role"`
+	CreatedAt time.Time `db:"CREATED_AT" json:"created_at"`
 }
 
 func UserByUniqueKey(key string, value interface{}) (u User, err error) {
@@ -38,6 +39,10 @@ func Users(limit int) (us []User, err error) {
 func (u *User) Create() (err error) {
 	q1 := `INSERT INTO USERS (UUID, NAME, PASSWORD, MAX_ROLE, CREATED_AT) VALUES ($1, $2, $3, $4, $5);`
 	q2 := `SELECT LAST_INSERT_ROWID();`
+	if u.MaxRole > Guest && len(u.Password) < 1 {
+		err = errors.New("User.MaxRole > 0 but User.Password = null")
+		return
+	}
 	tx, err := db.Beginx()
 	if err != nil {
 		return

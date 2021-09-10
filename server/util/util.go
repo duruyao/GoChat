@@ -102,6 +102,9 @@ func CreateUUId() string {
 }
 
 func Encrypt(plaintext string) string {
+	if len(plaintext) == 0 {
+		return ""
+	}
 	return fmt.Sprintf("%x", sha512.Sum512([]byte(plaintext)))
 }
 
