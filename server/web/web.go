@@ -79,7 +79,7 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GoRunWebServer() {
+func GoRunWebApp() {
 	mux := http.NewServeMux()
 	resHandler := http.FileServer(http.Dir(ResourceDir()))
 	mux.Handle("/static/", http.StripPrefix("/static/", resHandler))

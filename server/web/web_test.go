@@ -4,6 +4,6 @@ import (
 	"testing"
 )
 
-func TestGoRunWebServer(t *testing.T) {
-	GoRunWebServer()
+func TestGoRunWebApp(t *testing.T) {
+	GoRunWebApp()
 }
