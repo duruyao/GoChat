@@ -54,7 +54,16 @@ func (g *Group) Administrator() (u User, err error) {
 }
 
 func (g *Group) Members() (us []User, err error) {
-	q := `SELECT U.* FROM USERS U, MEMBERS J WHERE U.ID = J.USER_ID AND J.GROUP_ID = $1`
+	q := `SELECT U.* FROM USERS U, MEMBERS M WHERE U.ID = M.USER_ID AND M.GROUP_ID = $1`
 	err = db.Select(&us, q, g.AdminId)
 	return
+}
+
+func (g *Group) HasMember(u User) bool {
+	id := 0
+	q := `SELECT ID FROM MEMBERS WHERE USER_ID = $1 AND GROUP_ID = $2`
+	if err := db.Get(&id, q, u.Id, g.Id); err != nil {
+		return false
+	}
+	return 0 != id
 }

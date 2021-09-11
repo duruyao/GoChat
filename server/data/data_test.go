@@ -8,7 +8,7 @@ import (
 func TestUser_Create(t *testing.T) {
 	u1 := User{
 		Name:     "root",
-		MaxRole:  Owner,
+		MaxRole:  RoleTypeOwner,
 		Password: "12345678",
 	}
 	if err := u1.Create(); err != nil {
@@ -18,7 +18,7 @@ func TestUser_Create(t *testing.T) {
 	t.Log(u1)
 	u2 := User{
 		Name:     "admin1",
-		MaxRole:  Admin,
+		MaxRole:  RoleTypeAdmin,
 		Password: "6469659165901",
 	}
 	if err := u2.Create(); err != nil {
@@ -28,7 +28,7 @@ func TestUser_Create(t *testing.T) {
 
 	u3 := User{
 		Name:     "admin2",
-		MaxRole:  Admin,
+		MaxRole:  RoleTypeAdmin,
 		Password: "47165916596",
 	}
 	if err := u3.Create(); err != nil {
@@ -38,7 +38,7 @@ func TestUser_Create(t *testing.T) {
 
 	u4 := User{
 		Name:    "guest1",
-		MaxRole: Guest,
+		MaxRole: RoleTypeGuest,
 	}
 	if err := u4.Create(); err != nil {
 		t.Fatal(err)
@@ -47,7 +47,7 @@ func TestUser_Create(t *testing.T) {
 
 	u5 := User{
 		Name:    "guest2",
-		MaxRole: Guest,
+		MaxRole: RoleTypeGuest,
 	}
 	if err := u5.Create(); err != nil {
 		t.Fatal(err)
@@ -56,7 +56,7 @@ func TestUser_Create(t *testing.T) {
 
 	u6 := User{
 		Name:    "guest3",
-		MaxRole: Guest,
+		MaxRole: RoleTypeGuest,
 	}
 	if err := u6.Create(); err != nil {
 		t.Fatal(err)
@@ -65,7 +65,7 @@ func TestUser_Create(t *testing.T) {
 
 	u7 := User{
 		Name:    "guest4",
-		MaxRole: Guest,
+		MaxRole: RoleTypeGuest,
 	}
 	if err := u7.Create(); err != nil {
 		t.Fatal(err)
@@ -273,4 +273,8 @@ func TestUser_Delete(t *testing.T) {
 	for _, g := range gs {
 		t.Log(g)
 	}
+}
+
+func TestGroup_HasMember(t *testing.T) {
+
 }
