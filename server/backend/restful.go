@@ -1,4 +1,4 @@
-package server
+package backend
 
 import (
 	"github.com/duruyao/gochat/server/data"

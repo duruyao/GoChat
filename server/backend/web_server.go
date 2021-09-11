@@ -1,4 +1,4 @@
-package server
+package backend
 
 import (
 	mlog "github.com/duruyao/gochat/server/log"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func Run() {
+func GoRunWebServer(addr string) {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	v1 := router.Group("v1")
@@ -41,7 +41,7 @@ func Run() {
 	}
 
 	backendServer := http.Server{
-		Addr:              ":1213",
+		Addr:              addr,
 		Handler:           router,
 		TLSConfig:         nil,
 		ReadTimeout:       7 * time.Second,
