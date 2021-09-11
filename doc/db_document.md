@@ -1,0 +1,82 @@
+# GoChat Database Document
+
+## 1. USERS Table.
+
+| ID | UUID | NAME | PASSWORD | MAX_ROLE | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
+
+```sql
+CREATE TABLE USERS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    PASSWORD   TEXT,
+    MAX_ROLE   INTEGER     NOT NULL DEFAULT 0,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME'))
+);
+```
+
+## 2. SESSIONS Table.
+
+| ID | UUID | USER_ID | CREATED_AT |
+| :-: | :-: | :-: | :-: |
+| 1 |  |  |  |
+| 2 |  |  |  |
+| 3 |  |  |  |
+
+```sql
+CREATE TABLE SESSIONS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
+```
+
+## 2. GROUPS Table.
+
+| ID | UUID | NAME | ADMIN_ID | TOKEN | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
+
+```sql
+CREATE TABLE GROUPS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    NAME       VARCHAR(63) NOT NULL UNIQUE,
+    ADMIN_ID   INTEGER     NOT NULL,
+    TOKEN      VARCHAR(63),
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (ADMIN_ID) REFERENCES USERS (ID)
+);
+```
+
+## 4. MEMBERS Table.
+
+| ID | UUID | GROUP_ID | USER_ID | CREATED_AT |
+| :-: | :-: | :-: | :-: | :-: |
+| 1 |  |  |  |  |
+| 2 |  |  |  |  |
+| 3 |  |  |  |  |
+
+```sql
+CREATE TABLE MEMBERS
+(
+    ID         INTEGER PRIMARY KEY AUTOINCREMENT,
+    UUID       VARCHAR(63) NOT NULL UNIQUE,
+    GROUP_ID   INTEGER     NOT NULL,
+    USER_ID    INTEGER     NOT NULL,
+    CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
+    FOREIGN KEY (GROUP_ID) REFERENCES GROUPS (ID),
+    FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
+);
+```
