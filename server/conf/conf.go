@@ -12,7 +12,24 @@ type config struct {
 	MaxGroups         int    `json:"max_groups,omitempty"`
 	MaxUsersPerGroup  int    `json:"max_users_per_group,omitempty"`
 	MaxGroupsPerAdmin int    `json:"max_groups_per_admin,omitempty"`
-	HttpsEnable       bool   `json:"https_enable"`
+	HttpsEnable       bool   `json:"https_enable,omitempty"`
+}
+
+// Serialize returns JSON format []byte without indent.
+func (c *config) Serialize() ([]byte, error) {
+	cfg.rwMu.RLock()
+	defer cfg.rwMu.RUnlock()
+	return json.Marshal(c)
+}
+
+// Parse parses type Config from type []byte in JSON format.
+func (c *config) Parse(js []byte) error {
+	cfg.rwMu.Lock()
+	defer cfg.rwMu.Unlock()
+	if len(js) == 0 {
+		return nil
+	}
+	return json.Unmarshal(js, c)
 }
 
 // String returns JSON format string.
@@ -24,27 +41,6 @@ func (c *config) String() string {
 	} else {
 		return string(js)
 	}
-}
-
-// Serialize returns JSON format string without indent.
-func (c *config) Serialize() string {
-	cfg.rwMu.RLock()
-	defer cfg.rwMu.RUnlock()
-	if js, err := json.Marshal(c); err != nil {
-		return err.Error()
-	} else {
-		return string(js)
-	}
-}
-
-// Parse parses type Config from type []byte in JSON format.
-func (c *config) Parse(js []byte) error {
-	cfg.rwMu.Lock()
-	defer cfg.rwMu.Unlock()
-	if len(js) == 0 {
-		return nil
-	}
-	return json.Unmarshal(js, c)
 }
 
 var cfg = config{

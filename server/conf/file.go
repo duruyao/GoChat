@@ -47,5 +47,9 @@ func readFile(c *config) error {
 }
 
 func writeFile(c *config) error {
-	return ioutil.WriteFile(Path(), []byte(c.String()), 0666)
+	bytes, err := c.Serialize()
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(Path(), bytes, 0666)
 }
