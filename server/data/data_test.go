@@ -275,6 +275,6 @@ func TestUser_Delete(t *testing.T) {
 	}
 }
 
-func TestGroup_HasMember(t *testing.T) {
+func TestGroup_HasMember(t *testing.T) { // TODO: test
 
 }
