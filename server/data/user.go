@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-type Role int
+type RoleType int
 
 const (
-	Owner Role = 4
-	Admin Role = 2
-	Guest Role = 0
+	RoleTypeOwner RoleType = 4
+	RoleTypeAdmin RoleType = 2
+	RoleTypeGuest RoleType = 0
 )
 
 type User struct {
@@ -20,7 +20,7 @@ type User struct {
 	UUId      string    `db:"UUID" json:"uuid" form:"uuid"`
 	Name      string    `db:"NAME" json:"name" form:"name"`
 	Password  string    `db:"PASSWORD" json:"password"`
-	MaxRole   Role      `db:"MAX_ROLE" json:"max_role"`
+	MaxRole   RoleType  `db:"MAX_ROLE" json:"max_role"`
 	CreatedAt time.Time `db:"CREATED_AT" json:"created_at"`
 }
 
@@ -39,7 +39,7 @@ func Users(limit int) (us []User, err error) {
 func (u *User) Create() (err error) {
 	q1 := `INSERT INTO USERS (UUID, NAME, PASSWORD, MAX_ROLE, CREATED_AT) VALUES ($1, $2, $3, $4, $5);`
 	q2 := `SELECT LAST_INSERT_ROWID();`
-	if u.MaxRole > Guest && len(u.Password) < 1 {
+	if u.MaxRole > RoleTypeGuest && len(u.Password) < 1 {
 		err = errors.New("User.MaxRole > 0 but User.Password = null")
 		return
 	}
