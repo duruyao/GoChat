@@ -10,5 +10,4 @@ GoChat provides temporary and anonymous group chat service through Web ~~or App~
 
 - [REST APIs document](https://duruyao.github.io/gochat/)
 
-
 ~~**Not completed, please stay tuned**~~
