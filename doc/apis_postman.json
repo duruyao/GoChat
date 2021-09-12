@@ -30,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"root\",\n    \"max_role\": 4,\n    \"password\": \"12345678\"\n}",
+							"raw": "{\n    \"name\": \"root\",\n    \"max_role\": 1,\n    \"password\": \"12345678\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -114,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"bob\"\n}",
+							"raw": "{\n    \"max_role\": 2\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -256,7 +256,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:1213/v1/user_session?limit=&id=&uuid=&name=",
+							"raw": "localhost:1213/v1/user_session?id=&uuid=&name=",
 							"host": [
 								"localhost"
 							],
@@ -266,10 +266,6 @@
 								"user_session"
 							],
 							"query": [
-								{
-									"key": "limit",
-									"value": ""
-								},
 								{
 									"key": "id",
 									"value": ""
@@ -465,7 +461,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -506,7 +502,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -568,6 +564,21 @@
 				{
 					"name": "Query session's user",
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "433578ab-84c2-4e02-4656-de55a8097c9f",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "GoChat-Token",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -625,7 +636,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"group_1\",\n    \"token\": \"4691fgcg15\"\n\n}",
+							"raw": "{\n    \"name\": \"group_1\",\n    \"token\": \"4691fgcg15\",\n    \"admin_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -769,7 +780,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:1213/v1/group?limit=&id=&uuid=&user_id=",
+							"raw": "localhost:1213/v1/group?limit=&id=&uuid=&name=",
 							"host": [
 								"localhost"
 							],
@@ -792,7 +803,7 @@
 									"value": ""
 								},
 								{
-									"key": "user_id",
+									"key": "name",
 									"value": ""
 								}
 							]
@@ -806,7 +817,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:1213/v1/group_members?id=&uuid=&user_id=",
+							"raw": "localhost:1213/v1/group_members?id=&uuid=&name=",
 							"host": [
 								"localhost"
 							],
@@ -825,7 +836,7 @@
 									"value": ""
 								},
 								{
-									"key": "user_id",
+									"key": "name",
 									"value": ""
 								}
 							]
@@ -839,7 +850,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:1213/v1/group_administrator?id=&uuid=&user_id=",
+							"raw": "localhost:1213/v1/group_administrator?id=&uuid=&name=",
 							"host": [
 								"localhost"
 							],
@@ -858,7 +869,7 @@
 									"value": ""
 								},
 								{
-									"key": "user_id",
+									"key": "name",
 									"value": ""
 								}
 							]
