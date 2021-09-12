@@ -77,3 +77,5 @@ _options:
     image: true
     table: true
     styles: /css/editor.css
+
+theme: jekyll-theme-hacker
