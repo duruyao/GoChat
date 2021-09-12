@@ -22,7 +22,6 @@ title: API Docs
 
         {% if doc.auths and doc.auths[0].key %}
         <h6><b>Authorization</b> <span class="description">{{ doc.auths[0].type }}</span></h6>
-        <br>
         <table>
             <thead>
             <tr>
@@ -54,7 +53,7 @@ title: API Docs
             </tr>
             </thead>
             <tbody>
-            {% for auth in doc.path_vars %}
+            {% for item in doc.path_vars %}
             <tr>
                 <td>{{ item.key }}</td>
                 <td>{{ item.value }}</td>
@@ -76,7 +75,7 @@ title: API Docs
             </tr>
             </thead>
             <tbody>
-            {% for auth in doc.params %}
+            {% for item in doc.params %}
             <tr>
                 <td>{{ item.key }}</td>
                 <td>{{ item.value }}</td>
