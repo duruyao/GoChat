@@ -53,7 +53,10 @@ func createDb() (err error) {
 
 //
 func openDb() (err error) {
-	db, err = sqlx.Open("sqlite3", DbPath())
+	if db, err = sqlx.Open("sqlite3", DbPath()); err != nil {
+		return
+	}
+	_, err = db.Exec(`PRAGMA foreign_keys = ON;`)
 	return
 }
 
