@@ -53,10 +53,7 @@ func createDb() (err error) {
 
 //
 func openDb() (err error) {
-	if db, err = sqlx.Open("sqlite3", DbPath()); err != nil {
-		return
-	}
-	_, err = db.Exec(`PRAGMA foreign_keys = ON;`)
+	db, err = sqlx.Open("sqlite3", DbPath())
 	return
 }
 
@@ -84,7 +81,7 @@ CREATE TABLE SESSIONS
 (
     ID         INTEGER PRIMARY KEY AUTOINCREMENT,
     UUID       VARCHAR(63) NOT NULL UNIQUE,
-    USER_ID    INTEGER     NOT NULL UNIQUE,
+    USER_ID    INTEGER     NOT NULL,
     CREATED_AT TIMESTAMP   NOT NULL DEFAULT (DATETIME(CURRENT_TIMESTAMP, 'LOCALTIME')),
     FOREIGN KEY (USER_ID) REFERENCES USERS (ID)
 );
