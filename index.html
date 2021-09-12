@@ -1,0 +1,107 @@
+---
+title: API Docs
+---
+{% assign sorted_collections = site.collections | sort: "position_number" %}
+{% for collection in sorted_collections %}
+{% assign sorted_docs = collection.docs | sort: "position_number" %}
+{% for doc in sorted_docs %}
+<section class="doc-content">
+    <section class="left-docs">
+        <h3>
+            <a id="{{ doc.id | replace: '/', '' | replace: '.', '' }}">
+                {{ doc.title }}
+                {% if doc.type %}
+                <span class="endpoint {{ doc.type }}"></span>
+                {% endif %}
+            </a>
+            <a class="editor-link" href="cloudcannon:collections/{{ doc.relative_path }}">Edit</a>
+        </h3>
+        {% if doc.desc %}
+        <p class="description">{{ doc.desc }}</p>
+        {% endif %}
+
+        {% if doc.auths and doc.auths[0].key %}
+        <h6><b>Authorization</b> <span class="description">{{ doc.auths[0].type }}</span></h6>
+        <br>
+        <table>
+            <thead>
+            <tr>
+                <th>KEY</th>
+                <th>VALUE</th>
+                <th>DESCRIPTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in doc.auths %}
+            <tr>
+                <td>{{ item.key }}</td>
+                <td>{{ item.value }}</td>
+                <td>{{ item.desc }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if doc.path_vars and doc.path_vars[0].key %}
+        <h6><b>Path Variables</b></h6>
+        <table>
+            <thead>
+            <tr>
+                <th>KEY</th>
+                <th>VALUE</th>
+                <th>DESCRIPTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for auth in doc.path_vars %}
+            <tr>
+                <td>{{ item.key }}</td>
+                <td>{{ item.value }}</td>
+                <td>{{ item.desc }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if doc.params and doc.params[0].key %}
+        <h6><b>Request Params</b></h6>
+        <table>
+            <thead>
+            <tr>
+                <th>KEY</th>
+                <th>VALUE</th>
+                <th>DESCRIPTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for auth in doc.params %}
+            <tr>
+                <td>{{ item.key }}</td>
+                <td>{{ item.value }}</td>
+                <td>{{ item.desc }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {{ doc.content_markdown | markdownify }}
+
+        {% if doc.l_code_blocks and doc.l_code_blocks[0].code %}
+        {% for block in doc.l_code_blocks %}
+        {% include syntax-highlight.html block=block %}
+        {% endfor %}
+        {% endif %}
+    </section>
+    {% if doc.r_code_blocks and doc.r_code_blocks[0].code %}
+    <section class="right-code">
+        {% for block in doc.r_code_blocks %}
+        {% include syntax-highlight.html block=block %}
+        {% endfor %}
+    </section>
+    {% endif %}
+</section>
+{% endfor %}
+{% endfor %}
