@@ -1,6 +1,5 @@
 # GoChat APIs Document
 
-Import the exported [collection file](apis_postman.json) to your [Postman](https://web.postman.com/)
+- Acces the [APIs document](https://duruyao.github.io/gochat/) online.
 
-You will see the generated APIs document.
-
+- Import the exported [collection file](apis_postman.json) to your [Postman](https://web.postman.com/)
