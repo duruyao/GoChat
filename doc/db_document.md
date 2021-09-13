@@ -1,4 +1,4 @@
-# GoChat Database Document
+# GoChat Database Design Document
 
 ## 1. USERS Table.
 
