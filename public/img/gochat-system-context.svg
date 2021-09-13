@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="384px" preserveAspectRatio="none" style="width:428px;height:384px;background:#FFFFFF;" version="1.1" viewBox="0 0 428 384" width="428px" zoomAndPan="magnify"><defs/><g><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="224" x="95.5" y="16.0439">System Context Diagram of GoChat</text><!--MD5=[0fe5ec6a8e87a3f9f38d025ed254bc32]
+entity user1--><ellipse cx="22" cy="33.1201" fill="#1565C0" rx="8" ry="8" style="stroke:#0D47A1;stroke-width:1.5;"/><path d="M22,41.1201 L22,68.1201 M9,49.1201 L35,49.1201 M22,68.1201 L9,83.1201 M22,68.1201 L35,83.1201 " fill="none" style="stroke:#0D47A1;stroke-width:1.5;"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="32" x="6" y="103.9561">Bob</text><!--MD5=[7d9a324aa2179074e5d7a1e217b89663]
+entity user2--><ellipse cx="235" cy="33.1201" fill="#1565C0" rx="8" ry="8" style="stroke:#0D47A1;stroke-width:1.5;"/><path d="M235,41.1201 L235,68.1201 M222,49.1201 L248,49.1201 M235,68.1201 L222,83.1201 M235,68.1201 L248,83.1201 " fill="none" style="stroke:#0D47A1;stroke-width:1.5;"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="37" x="216.5" y="103.9561">Alice</text><!--MD5=[32b3792f79f88c01a54a826e7ad3379b]
+entity gochatserver--><rect fill="#1976D2" height="41.8516" style="stroke:#1565C0;stroke-width:1.5;" width="132" x="186" y="203.6201"/><text fill="#FFFFFF" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="112" x="196" y="231.9561">GoChat Server</text><!--MD5=[7a319bb5aa54bbfcdfa740613ce60031]
+entity broswer--><rect fill="#757575" height="41.8516" style="stroke:#616161;stroke-width:1.5;" width="85" x="96.5" y="44.6201"/><text fill="#FFFFFF" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="65" x="106.5" y="72.9561">Browser</text><!--MD5=[4541fb81c80c07473fe4b07432ef0971]
+entity app--><rect fill="#757575" height="41.8516" style="stroke:#616161;stroke-width:1.5;" width="110" x="312" y="44.6201"/><text fill="#FFFFFF" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="90" x="322" y="72.9561">Gochat App</text><!--MD5=[ab2d20f0e038df8c366e94bc69388139]
+link user1 to broswer--><path d="M38.27,65.6201 C51.99,65.6201 72.34,65.6201 91.16,65.6201 " fill="none" id="user1-to-broswer" style="stroke:#616161;stroke-width:1.0;"/><polygon fill="#616161" points="96.42,65.6201,87.42,61.6201,91.42,65.6201,87.42,69.6201,96.42,65.6201" style="stroke:#616161;stroke-width:1.0;"/><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="22" x="56.25" y="59.5181">use</text><!--MD5=[5a448d20f79c764bc532ee1a1b6d809e]
+link user2 to app--><path d="M253.63,65.6201 C267.53,65.6201 287.36,65.6201 306.56,65.6201 " fill="none" id="user2-to-app" style="stroke:#616161;stroke-width:1.0;"/><polygon fill="#616161" points="311.95,65.6201,302.95,61.6201,306.95,65.6201,302.95,69.6201,311.95,65.6201" style="stroke:#616161;stroke-width:1.0;"/><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="22" x="271.75" y="59.5181">use</text><!--MD5=[c82444c0558ee3b95e00b8e48aded85d]
+link app to gochatserver--><path d="M358.65,86.8301 C348.77,109.3601 330.88,146.2101 309,173.6201 C301.38,183.1601 291.8,192.3501 282.68,200.1901 " fill="none" id="app-to-gochatserver" style="stroke:#616161;stroke-width:1.0;"/><polygon fill="#616161" points="278.81,203.4701,288.2689,200.726,282.6323,200.2468,283.1116,194.6103,278.81,203.4701" style="stroke:#616161;stroke-width:1.0;"/><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="42" x="344" y="153.5181">access</text><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="62" x="334" y="170.1265">[TCP, RPC]</text><!--MD5=[0603468550791a508087fc621ac19ec6]
+link broswer to gochatserver--><path d="M145.48,86.6501 C153.49,109.3301 168.7,146.6501 190,173.6201 C197.8,183.5001 207.89,192.6701 217.65,200.3901 " fill="none" id="broswer-to-gochatserver" style="stroke:#616161;stroke-width:1.0;"/><polygon fill="#616161" points="221.81,203.6101,217.1529,194.9319,217.8602,200.5444,212.2477,201.2516,221.81,203.6101" style="stroke:#616161;stroke-width:1.0;"/><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="42" x="226.5" y="153.5181">access</text><text fill="#616161" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="113" x="191" y="170.1265">[HTTPS, TCP, REST]</text><rect fill="#DDDDDD" height="109.6006" rx="5" ry="5" style="stroke:#000000;stroke-width:1.0;" width="200" x="206" y="258.4717"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="38" x="216" y="281.5156">Color</text><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="33" x="298" y="281.5156">Type</text><rect fill="#1565C0" height="19.1201" style="stroke:none;stroke-width:1.0;" width="82" x="212" y="284.5918"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="0" x="236" y="300.6357"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="44" x="298" y="300.6357">person</text><rect fill="#616161" height="19.1201" style="stroke:none;stroke-width:1.0;" width="82" x="212" y="303.7119"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="0" x="236" y="319.7559"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="98" x="298" y="319.7559">external person</text><rect fill="#1976D2" height="19.1201" style="stroke:none;stroke-width:1.0;" width="82" x="212" y="322.832"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="0" x="224" y="338.876"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="44" x="298" y="338.876">system</text><rect fill="#757575" height="19.1201" style="stroke:none;stroke-width:1.0;" width="82" x="212" y="341.9521"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="0" x="236" y="357.9961"/><text fill="#222222" font-family="'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace" font-size="14" lengthAdjust="spacing" textLength="98" x="298" y="357.9961">external system</text><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="265.4717" y2="265.4717"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="284.5918" y2="284.5918"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="303.7119" y2="303.7119"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="322.832" y2="322.832"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="341.9521" y2="341.9521"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="400" y1="361.0723" y2="361.0723"/><line style="stroke:#222222;stroke-width:1.0;" x1="212" x2="212" y1="265.4717" y2="361.0723"/><line style="stroke:#222222;stroke-width:1.0;" x1="294" x2="294" y1="265.4717" y2="361.0723"/><line style="stroke:#222222;stroke-width:1.0;" x1="400" x2="400" y1="265.4717" y2="361.0723"/><!--MD5=[e82df5195f39c675c52c0e3822bc627b]
+@startuml gochat-system-context
+
+' !include https://unpkg.com/plantuml-style-c4@latest/c4_context.puml
+' uncomment the following line and comment the first to use locally
+!include plantuml-style-c4/c4_context.puml
+
+LAYOUT_WITH_LEGEND()
+' LAYOUT_AS_SKETCH()
+
+title System Context Diagram of GoChat
+
+Actor(user1, "Bob")
+Actor(user2, "Alice")
+
+System(gochatserver, "GoChat Server")
+System_Ext(broswer, "Browser")
+System_Ext(app, "Gochat App")
+
+Rel_Neighbor(user1, broswer, "use")
+Rel_Neighbor(user2, app, "use")
+
+Rel(app, gochatserver, "access", "TCP, RPC")
+Rel(broswer, gochatserver, "access", "HTTPS, TCP, REST")
+
+@enduml
+
+@startuml gochat-system-context
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+skinparam ComponentStyle uml2
+skinparam Shadowing false
+
+skinparam Default {
+    FontName "'Input Mono','Microsoft YaHei Mono',Menlo, Monaco, 'Courier New', monospace"
+    FontColor #222222
+    FontSize  14
+    FontStyle plain
+    Shadowing false
+    TextAlignment center
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Note {
+    BackgroundColor #90A4AE
+    BorderColor #90A4AE
+    BorderThickness 1
+    FontColor White
+    Shadowing false
+    TextAlignment left
+}
+
+skinparam Note<<quit>> {
+
+    BackgroundColor #F9A825
+    BorderColor #F9A825
+}
+
+skinparam Sequence {
+    ActorBorderThickness 1
+    LifeLineBorderColor GREEN
+    ParticipantBorderThickness 0
+    Shadowing false
+
+
+    GroupBorderThickness 1
+    GroupBorderColor #1565C0
+    GroupBackgroundColor #BBDEFB
+}
+
+skinparam Activity {
+
+    StartColor #37A77C
+    EndColor #F6363F
+    AttributeFontColor white
+    AttributeFontSize  15
+    AttributeFontname  Droid Sans Mono
+
+    BackgroundColor #BBDEFB
+    BorderColor #90CAF9
+    BorderThickness 1
+
+    ArrowThickness 1
+
+
+    BarColor   #0D47A1
+
+
+    DiamondBackgroundColor   #FFE0B2
+    DiamondBorderColor    #FFCC80
+
+
+}
+
+skinparam Class {
+    BackgroundColor #E3F2FD
+    BorderColor #64B5F6
+    BorderThickness 1
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 14
+}
+
+
+
+skinparam Interface {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+    FontSize 14
+
+
+    StereotypeFontColor #589DF6
+    StereotypeFontSize 1
+}
+
+
+
+skinparam Participant {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    FontColor White
+    Shadowing false
+}
+
+skinparam Actor {
+    BackgroundColor #1565C0
+    BorderColor #1565C0
+    Shadowing false
+}
+
+skinparam UseCase {
+    BackgroundColor #64B5F6
+    BorderColor #64B5F6
+    Shadowing false
+    ArrowThickness 1
+    ArrowColor #1565C0
+
+    ActorBackgroundColor #1565C0
+    ActorBorderColor #0D47A1
+    ActorShadowing false
+ 
+}
+
+
+skinparam State {
+    FontSize           17
+
+    AttributeFontSize  14
+    
+    BackgroundColor    #BBDEFB
+    BorderColor        #90CAF9
+    StartColor #37A77C
+    EndColor #F6363F
+}
+
+skinparam Partition {
+    BorderColor #424242
+    BorderStyle dashed
+
+    BorderThickness 1
+}
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Queue {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Agent {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Artifact {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Boundary {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Card {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Cloud {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Component {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Control {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Database {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Entity {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam File {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Folder {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+   
+}
+skinparam Frame {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Node {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+
+skinparam Package {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+skinparam Stack {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Rectangle {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam Storage {
+    BackgroundColor #E3F2FD
+    BorderColor #424242
+}
+
+skinparam rectangle<<usercase>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Arrow {
+    Color #616161
+    FontColor #616161
+    FontSize 12
+}
+
+skinparam rectangle<<boundary>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #424242
+    BorderColor #424242
+    BorderStyle dashed
+    BackgroundColor White
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam actor<<person>> {
+  BorderColor #0D47A1
+  BackgroundColor #1565C0
+}
+
+skinparam actor<<internal_person>> {
+  BorderColor #424242
+  BackgroundColor #616161
+}
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1565C0
+    BorderColor #0D47A1
+}
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #616161
+    BorderColor #424242
+}
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1976D2
+    BorderColor #1565C0
+}
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #757575
+    BorderColor #616161
+}
+
+skinparam database<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1976D2
+    BorderColor #1565C0
+}
+
+skinparam database<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #757575
+    BorderColor #616161
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+hide stereotype
+legend right
+|= Color          |= Type |
+|<#1565C0>      | person |
+|<#616161>      | external person |
+|<#1976D2>   | system |
+|<#757575>      | external system |
+endlegend
+
+title System Context Diagram of GoChat
+
+actor "==Bob" <<person>> as user1
+actor "==Alice" <<person>> as user2
+
+rectangle "==GoChat Server" <<system>> as gochatserver
+rectangle "==Browser" <<external_system>> as broswer
+rectangle "==Gochat App" <<external_system>> as app
+
+user1 -> broswer : "===use"
+user2 -> app : "===use"
+
+app - -> gochatserver : "===access\n//<size:12>[TCP, RPC]</size>//"
+broswer - -> gochatserver : "===access\n//<size:12>[HTTPS, TCP, REST]</size>//"
+
+@enduml
+
+PlantUML version 1.2021.7(Sun May 23 20:40:07 CST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: GBK
+Language: zh
+Country: CN
+--></g></svg>
