@@ -10,4 +10,6 @@ GoChat provides temporary and anonymous group chat service through Web ~~or App~
 
 - [Database design document](doc/db_document.md)
 
+- [Software Architecture document](doc/arch_document.md)
+
 ~~**Not completed, please stay tuned**~~
