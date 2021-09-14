@@ -636,7 +636,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"group_1\",\n    \"token\": \"4691fgcg15\",\n    \"admin_id\": 1\n}",
+							"raw": "{\n    \"name\": \"group_1\",\n    \"token\": \"298fbgv479bv\",\n    \"admin_id\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -660,6 +660,21 @@
 				{
 					"name": "Read group",
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "433578ab-84c2-4e02-4656-de55a8097c9f",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "GoChat-Token",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -676,7 +691,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -705,7 +720,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"token\": \"\"\n}",
+							"raw": "{\n    \"admin_id\": \"1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -726,7 +741,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -767,7 +782,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
@@ -960,11 +975,11 @@
 							"variable": [
 								{
 									"key": "group_id",
-									"value": null
+									"value": ""
 								},
 								{
 									"key": "user_id",
-									"value": null
+									"value": ""
 								}
 							]
 						}
