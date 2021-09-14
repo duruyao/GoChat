@@ -21,21 +21,21 @@ title: API Docs
         {% endif %}
 
         {% if doc.auths and doc.auths[0].key %}
-        <h6><b>Authorization</b> <span class="description">{{ doc.auths[0].type }}</span></h6>
+        <h6><b>Authorization</b> <span class="description">{{ doc.auth_type }}</span></h6>
         <table>
             <thead>
             <tr>
-                <th>KEY</th>
-                <th>VALUE</th>
-                <th>DESCRIPTION</th>
+                <th style="text-align:center;">KEY</th>
+                <th style="text-align:center;">VALUE</th>
+                <th style="text-align:center;">DESCRIPTION</th>
             </tr>
             </thead>
             <tbody>
             {% for item in doc.auths %}
             <tr>
-                <td>{{ item.key }}</td>
-                <td>{{ item.value }}</td>
-                <td>{{ item.desc }}</td>
+                <td style="text-align:center;"><b>{{ item.key }}</b></td>
+                <td style="text-align:center;color:#28B463;"><b>{{ item.value }}</b></td>
+                <td style="text-align:center;color:#99A3A4"><b>{{ item.desc }}</b></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -47,17 +47,19 @@ title: API Docs
         <table>
             <thead>
             <tr>
-                <th>KEY</th>
-                <th>VALUE</th>
-                <th>DESCRIPTION</th>
+                <th style="text-align:center;">KEY</th>
+                <th style="text-align:center;">VALUE</th>
+                <th style="text-align:center;">REQUIRED</th>
+                <th style="text-align:center;">DESCRIPTION</th>
             </tr>
             </thead>
             <tbody>
             {% for item in doc.path_vars %}
             <tr>
-                <td>{{ item.key }}</td>
-                <td>{{ item.value }}</td>
-                <td>{{ item.desc }}</td>
+                <td style="text-align:center;"><b>{{ item.key }}</b></td>
+                <td style="text-align:center;color:#3498DB;"><b>{{ item.value }}</b></td>
+                <td style="text-align:center;color:#DE3163;"><b>✔</b></td>
+                <td style="text-align:center;color:#99A3A4"><b>{{ item.desc }}</b></td>
             </tr>
             {% endfor %}
             </tbody>
@@ -69,17 +71,43 @@ title: API Docs
         <table>
             <thead>
             <tr>
-                <th>KEY</th>
-                <th>VALUE</th>
-                <th>DESCRIPTION</th>
+                <th style="text-align:center;">KEY</th>
+                <th style="text-align:center;">VALUE</th>
+                <th style="text-align:center;">REQUIRED</th>
+                <th style="text-align:center;">DESCRIPTION</th>
             </tr>
             </thead>
             <tbody>
             {% for item in doc.params %}
             <tr>
-                <td>{{ item.key }}</td>
-                <td>{{ item.value }}</td>
-                <td>{{ item.desc }}</td>
+                <td style="text-align:center;"><b>{{ item.key }}</b></td>
+                <td style="text-align:center;color:#3498DB;"><b>{{ item.value }}</b></td>
+                <td style="text-align:center;color:#DE3163;"><b>{% if item.required %} ✔ {% endif %}</b></td>
+                <td style="text-align:center;color:#99A3A4"><b>{{ item.desc }}</b></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if doc.body_fields and doc.body_fields[0].key %}
+        <h6><b>Body</b> <span class="description">{{ doc.body_type }}</span></h6>
+        <table>
+            <thead>
+            <tr>
+                <th style="text-align:center;">KEY</th>
+                <th style="text-align:center;">TYPE</th>
+                <th style="text-align:center;">REQUIRED</th>
+                <th style="text-align:center;">DESCRIPTION</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in doc.body_fields %}
+            <tr>
+                <td style="text-align:center;"><b>{{ item.key }}</b></td>
+                <td style="text-align:center;color:#3498DB;"><b>{{ item.type }}</b></td>
+                <td style="text-align:center;color:#DE3163;"><b>{% if item.required %} ✔ {% endif %}</b></td>
+                <td style="text-align:center;color:#99A3A4"><b>{{ item.desc }}</b></td>
             </tr>
             {% endfor %}
             </tbody>
