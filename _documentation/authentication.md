@@ -12,13 +12,13 @@ content_markdown: |-
 
 l_code_blocks:
   - code: |-
-      curl --location --request GET 'localhost:1213/v1/user/:id' \
+      curl --location --request GET 'localhost:1213/v1/api' \
       --header 'GoChat-Token: 433578ab-84c2-4e02-4656-de55a8097c9f'
     title: cURL
     language: bash
   - code: |-
       var settings = {
-        "url": "localhost:1213/v1/user/:id",
+        "url": "localhost:1213/v1/api",
         "method": "GET",
         "timeout": 0,
         "headers": {

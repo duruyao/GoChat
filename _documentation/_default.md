@@ -3,9 +3,9 @@ title:
 position_number: n
 type:
 desc:
+auth_type:
 auths:
-  - type:
-    key:
+  - key:
     value:
     desc:
 path_vars:
@@ -15,6 +15,13 @@ path_vars:
 params:
   - key:
     value:
+    required:
+    desc:
+body_type:
+body_fields:
+  - key:
+    type:
+    required:
     desc:
 content_markdown:
 l_code_blocks:
