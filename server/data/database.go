@@ -51,7 +51,6 @@ func createDb() (err error) {
 	return
 }
 
-//
 func openDb() (err error) {
 	if db, err = sqlx.Open("sqlite3", DbPath()); err != nil {
 		return
@@ -60,7 +59,6 @@ func openDb() (err error) {
 	return
 }
 
-//
 func closeDb() error {
 	return db.Close()
 }

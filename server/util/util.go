@@ -18,7 +18,7 @@ import (
 	"time"
 )
 
-// Tomorrow() returns an object of type time.Time whose value is 00:00:00.000 of the next day.
+// Tomorrow returns an object of type time.Time whose value is 00:00:00.000 of the next day.
 func Tomorrow() time.Time {
 	t := time.Now().Local().AddDate(0, 0, 1)
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
@@ -53,7 +53,7 @@ func GoChatDir() string {
 var userHomeDirOnce sync.Once
 var userHomeDir string
 
-// GoChatDir returns the home directory of the current user, such as "/home/user" in Unix-like OS.
+// UserHomeDir returns the home directory of the current user, such as "/home/user" in Unix-like OS.
 func UserHomeDir() string {
 	userHomeDirOnce.Do(func() {
 		var err error
@@ -67,10 +67,8 @@ func UserHomeDir() string {
 
 var quit = make(chan struct{})
 
-//
 func Quit() <-chan struct{} { return quit }
 
-//
 func IsQuit() bool {
 	select {
 	case <-quit:
@@ -82,7 +80,6 @@ func IsQuit() bool {
 
 var quitOnce sync.Once
 
-//
 func SetQuit() { quitOnce.Do(func() { close(quit) }) }
 
 // CreateUUId creates a random UUID with from RFC 4122

@@ -52,49 +52,42 @@ var cfg = config{
 	HttpsEnable:       false,
 }
 
-//
 func Addr() string {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.Addr
 }
 
-//
 func MaxUsers() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.MaxUsers
 }
 
-//
 func MaxGroups() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.MaxGroups
 }
 
-//
 func MaxUsersPreGroup() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.MaxUsersPerGroup
 }
 
-//
 func MaxGroupsPerAdmin() int {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.MaxGroupsPerAdmin
 }
 
-//
 func HttpsEnable() bool {
 	cfg.rwMu.RLock()
 	defer cfg.rwMu.RUnlock()
 	return cfg.HttpsEnable
 }
 
-//
 func SetAddr(addr string) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -102,7 +95,6 @@ func SetAddr(addr string) error {
 	return writeFile(&cfg)
 }
 
-//
 func SetMaxUsers(maxUsers int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -110,7 +102,6 @@ func SetMaxUsers(maxUsers int) error {
 	return writeFile(&cfg)
 }
 
-//
 func SetMaxGroups(MaxGroups int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -118,7 +109,6 @@ func SetMaxGroups(MaxGroups int) error {
 	return writeFile(&cfg)
 }
 
-//
 func SetMaxUsersPreGroup(maxUsersPreGroup int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -126,7 +116,6 @@ func SetMaxUsersPreGroup(maxUsersPreGroup int) error {
 	return writeFile(&cfg)
 }
 
-//
 func SetMaxGroupsPerAdmin(MaxGroupsPerAdmin int) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()
@@ -134,7 +123,6 @@ func SetMaxGroupsPerAdmin(MaxGroupsPerAdmin int) error {
 	return writeFile(&cfg)
 }
 
-//
 func SetHttpsEnable(httpsEnable bool) error {
 	cfg.rwMu.Lock()
 	defer cfg.rwMu.Unlock()

@@ -26,7 +26,6 @@ func Path(name string) string {
 	return Dir() + "/" + name + ".log"
 }
 
-//
 func IsNotExist() bool {
 	for name := range files {
 		if _, err := os.Stat(Path(name)); os.IsNotExist(err) {
@@ -36,7 +35,6 @@ func IsNotExist() bool {
 	return false
 }
 
-//
 func createFiles() (err error) {
 	if _, e := os.Stat(Dir()); os.IsNotExist(e) {
 		if err = os.MkdirAll(Dir(), os.ModePerm); err != nil {
@@ -52,7 +50,6 @@ func createFiles() (err error) {
 	return err
 }
 
-//
 func openFiles() (err error) {
 	for name, f := range files {
 		if nil != f {
@@ -65,7 +62,6 @@ func openFiles() (err error) {
 	return nil
 }
 
-//
 func closeFiles() error {
 	for _, f := range files {
 		if f != nil {

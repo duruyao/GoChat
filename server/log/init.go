@@ -19,7 +19,6 @@ func init() {
 	go goRefreshFiles()
 }
 
-//
 func goRefreshFiles() {
 	duration := util.Tomorrow().Sub(time.Now().Local())
 	select {
